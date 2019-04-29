@@ -1,11 +1,13 @@
 import Phaser from "phaser";
 import Player from "./player";
+import Timer from './timer';
+import Animations from "./anims";
 
 const gameRatio = { width: 9 * 32, height: 15 * 32 };
 
 const config = {
   type: Phaser.AUTO,
-  pixelArt: true,
+  // pixelArt: true,
   scale: {
     parent: "run-for-it",
     mode: Phaser.Scale.FIT,
@@ -21,14 +23,13 @@ const config = {
   physics: {
     default: "arcade",
     arcade: {
-      debug: true,
+      // debug: true,
       gravity: { y: 0 }
     }
   }
 };
 
 const game = new Phaser.Game(config);
-let player;
 
 function preload() {
   const progressBox = this.add.graphics();
@@ -63,17 +64,27 @@ function preload() {
 
   this.load.image("marks", './assets/marks.png');
   this.load.image("house", './assets/house.png');
+  this.load.image("directions", './assets/directions.png')
   this.load.image("floor_base", './assets/floor_base.png');
   this.load.image("trees_front", './assets/trees_front.png');
   this.load.image("trees_back", './assets/trees_back.png');
+  this.load.image("alert", "./assets/strong_exclamation.png");
+  this.load.image("forest_floor", "./assets/forest_floor.png");
   this.load.tilemapTiledJSON("map", "./assets/forest1.json");
   this.load.atlas("sprite", "./assets/sprite-0.png", "./assets/sprite-0.json");
+  this.load.atlas("overlays", "./assets/overlays.png", "./assets/overlays.json");
+  this.load.atlas("effects", "./assets/effects.png", "./assets/effects.json");
 }
 
 function create() {
+  const animations = new Animations(this.scene.scene.anims);
+  this.alert;
   const map = this.make.tilemap({ key: "map" });
-  this.physics.world.setBounds(map.x,map.y, map.widthInPixels, map.heightInPixels , true, true, true, true);
+  this.physics.world.setBounds(map.x, map.y, map.widthInPixels, map.heightInPixels, true, true, true, true);
   const spawnPoint = map.findObject("spawn", obj => obj.name === "spawn_point");
+  const escapeTrigger = map.findObject("escape", obj => obj.name === "escape");
+
+  map.createStaticLayer("escape")
 
   const marks = map.addTilesetImage("marks", "marks");
   const floor_base = map.addTilesetImage("floor_base", "floor_base");
@@ -82,54 +93,81 @@ function create() {
   baseLayer.setCollisionByProperty({ collides: true });
   const trapsLayer = map.createStaticLayer("traps", marks, 0, 0);
   trapsLayer.setCollisionByProperty({ collides: true });
+  const filteredTiles = trapsLayer.filterTiles(filterByTrap);
+  filteredTiles.forEach((tile) => createshine(tile, this));
 
+  function filterByTrap(tile) { return tile.properties.collides; }
+  function createshine(tile, scene) {
+    let shine = scene.add.sprite(tile.getCenterX(), tile.getCenterY(), "effects", "shine.0").setScale(0.3).setDepth(100);
+    shine.anims.play("shine", true);
+    // game.debug.renderSpriteBounds(shine);
+  }
+
+  this.add.image(0, 0, "forest_floor").setOrigin(0, 0);
   this.add.image(0, 0, "trees_back").setOrigin(0, 0);
 
-  player = new Player(this, spawnPoint.x, spawnPoint.y);
-  this.physics.add.collider(player.sprite, baseLayer);
-  this.physics.add.overlap(player.sprite, trapsLayer);
+  this.add.image(0, 0, "trees_front").setOrigin(0, 0).setDepth(5);
+  this.player = new Player(this, spawnPoint.x, spawnPoint.y);
+  this.physics.add.collider(this.player.aura, baseLayer);
+  this.physics.add.overlap(this.player.aura, trapsLayer);
 
   trapsLayer.setTileIndexCallback([4], triggerTrap, this);
 
-  this.add.image(0, 0, "trees_front").setOrigin(0, 0);
   const frontScenery = this.physics.add.staticGroup();
   frontScenery.create(28, 910, "house")
 
-  this.physics.add.collider(player.sprite, frontScenery);
-  const camera = this.cameras.main;
-  camera.startFollow(player.sprite);
-  camera.setBounds(0, 0, map.widthInPixels, map.heightInPixels);
 
-  this.playTime = this.time.addEvent({ delay: 15 * 1000, callback: fadeSceneRestart, args: [this.input, player, this.time, this.scene], callbackScope: this, });
-  this.playTime.pause = true;
-  this.input.keyboard.on('keydown', () => this.playTime.pause = false); 
+  this.physics.add.collider(this.player.aura, frontScenery);
+  const camera = this.cameras.main;
+  camera.zoom = 2;
+  camera.startFollow(this.player.aura);
+  camera.setBounds(0, 0, map.widthInPixels, map.heightInPixels);
+  camera.fadeEffect.start(false, 400, 0, 0, 0);
+  this.playTime = new Timer({ scene: this, time: this.time, input: this.input, callback: (time) => fadeSceneRestart(this.player, time, this.scene) });
   const debugGraphics = this.add.graphics().setAlpha(0.75);
 
-  map.renderDebug(debugGraphics, {
-    tileColor: null,
-    collidingTileColor: new Phaser.Display.Color(243, 134, 48, 128), 
-    faceColor: new Phaser.Display.Color(40, 39, 37, 255) 
-  });
+  // map.renderDebug(debugGraphics, {
+  //   tileColor: null,
+  //   collidingTileColor: new Phaser.Display.Color(243, 134, 48, 128), 
+  //   faceColor: new Phaser.Display.Color(40, 39, 37, 255) 
+  // });
+
+  const directions = this.add.image(camera.midPoint.x + 30, camera.midPoint.y - 70, "directions");
+  directions.scrollFactor = 0;
+  directions.setScale(0.3).setDepth(1000);
+  this.input.disable(this.player.aura.scene);
+  this.input.keyboard.on('keydown-SPACE', () => { directions.destroy(); this.input.enable(this.player.aura.scene); });
 }
 
-function fadeSceneRestart(input, player, time, scene) {
-  input.disable(player.sprite.scene);
-  const sceneRestartTimer = time.delayedCall(1 * 1000, () =>  {scene.restart(); input.enable(player.sprite.scene);}, [scene], this)
+function fadeSceneRestart(player, time, scene) {
+  if (scene.systems.input.enabled) {
+    scene.systems.input.disable(player.aura.scene);
+    scene.systems.cameras.main.fadeEffect.start(true, 400, 0, 0, 0);
+    const sceneRestartTimer = time.delayedCall(1 * 1000, () => { scene.restart();}, [scene], this)
+  }
 }
 
 function triggerTrap(sprite, tile) {
-  const triggerX = Math.abs(sprite.x - tile.getCenterX()) < tile.width / 2;
-  const triggerY = Math.abs(sprite.y - tile.getCenterY()) < tile.height / 2;
-  //console.log(Math.abs(sprite.x - tile.getCenterX()), Math.abs(sprite.y - tile.getCenterY()), triggerX, triggerY, tile.height / 2);
+  const centerSprite = sprite.body.center;
+  const triggerX = (centerSprite.x > tile.getCenterX() && Math.abs(centerSprite.x - tile.getCenterX()) < tile.width / 2) || (centerSprite.x < tile.getCenterX() && Math.abs(tile.getCenterX() - centerSprite.x) < tile.width / 2);
+  const triggerY = (centerSprite.y > tile.getCenterY() && Math.abs(centerSprite.y - tile.getCenterY()) < tile.height / 2) || (centerSprite.y < tile.getCenterY() && Math.abs(tile.getCenterY() - centerSprite.y) < tile.height / 2);
   if (triggerX && triggerY) {
-    fadeSceneRestart(this.input, player, this.time, this.scene);
-  } else {
-    //play trap hint animation
+    this.player.aura.remove(this.alert, true)
+    this.player.trapped = true;
+    fadeSceneRestart(this.player, this.time, this.scene);
+  } else if (!this.player.aura.exists(this.alert)) {
+    this.alert = this.add.image(0, -80, "alert");
+    this.alert.name = 'exclamation mark';
+    this.player.aura.add(this.alert);
+    this.player.aura.getByName('exclamation mark').setDepth(1000);
+    this.player.aura
+    this.player.aura.setDepth(5);
+    const hideAlert = this.time.delayedCall(200, () => this.player.aura.remove(this.alert, true), [], this);
   }
   return false;
 };
 
 function update(time, delta) {
-  player.update();
-  // console.log(Math.ceil(this.playTime.elapsed / 1000));
+  this.player.update();
+  this.playTime.update();
 }

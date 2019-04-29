@@ -1,59 +1,20 @@
 import Phaser from "phaser";
 
 export default class Player {
-
   constructor(scene, x, y) {
     this.scene = scene;
-    const anims = scene.anims;
-    anims.create({
-      key: "left",
-      frames: anims.generateFrameNames("sprite", {
-        prefix: "sprite1.left.",
-        start: 0,
-        end: 3,
-        zeroPad: 0
-      }),
-      frameRate: 10,
-      repeat: -1
-    });
-    anims.create({
-      key: "right",
-      frames: anims.generateFrameNames("sprite", {
-        prefix: "sprite1.right.",
-        start: 0,
-        end: 3,
-        zeroPad: 0
-      }),
-      frameRate: 10,
-      repeat: -1
-    });
-    anims.create({
-      key: "front",
-      frames: anims.generateFrameNames("sprite", {
-        prefix: "sprite1.front.",
-        start: 0,
-        end: 3,
-        zeroPad: 0
-      }),
-      frameRate: 10,
-      repeat: -1
-    });
-    anims.create({
-      key: "back",
-      frames: anims.generateFrameNames("sprite", {
-        prefix: "sprite1.back.",
-        start: 0,
-        end: 3,
-        zeroPad: 0
-      }),
-      frameRate: 10,
-      repeat: -1
-    });
-
-    this.sprite = this.scene.physics.add.sprite(x, y, "sprite", "sprite1.back.0");
-    this.sprite.setSize(25, 12);
-    this.sprite.setOffset(0, 28);
-    this.sprite.setCollideWorldBounds(true);
+    this.trapped = false;
+    this.aura = this.scene.add.container(x, y);
+    this.sprite = this.scene.add.sprite(0, 0, "sprite", "sprite.back.0");
+    this.sprite.name = "player sprite";
+    this.aura.setSize(200, 200);
+    this.aura.add(this.sprite);
+    this.aura.getByName('player sprite').setDepth(1);
+    this.scene.physics.world.add(this.aura);
+    this.scene.physics.world.enable(this.aura);
+    this.aura.setScale(0.25);
+    this.aura.body.setCircle(25, 80, 150)
+    this.aura.body.setCollideWorldBounds(true);
 
     this.cursors = this.scene.input.keyboard.createCursorKeys();
   }
@@ -61,37 +22,53 @@ export default class Player {
   update() {
     function stopMovement(prevVelocity, sprite) {
       sprite.anims.stop();
-      if (prevVelocity.x < 0) sprite.setTexture("sprite", "sprite1.left.0");
-      else if (prevVelocity.x > 0) sprite.setTexture("sprite", "sprite1.right.0");
-      else if (prevVelocity.y < 0) sprite.setTexture("sprite", "sprite1.back.0");
-      else if (prevVelocity.y > 0) sprite.setTexture("sprite", "sprite1.front.0");
+      if (prevVelocity.x < 0) sprite.setTexture("sprite", "sprite.left.0");
+      else if (prevVelocity.x > 0) sprite.setTexture("sprite", "sprite.right.0");
+      else if (prevVelocity.y < 0) sprite.setTexture("sprite", "sprite.back.0");
+      else if (prevVelocity.y > 0) sprite.setTexture("sprite", "sprite.front.0");
     }
-  
-    const speed = 175;
-    const prevVelocity = this.sprite.body.velocity.clone();
-    this.sprite.body.setVelocity(0);
 
-    if (this.sprite.scene.input.enabled) {
-      console.log(this.sprite.body.touching);
+    const speed = this.cursors.space.isDown ? 175 : 120;
+    this.sprite.anims.msPerFrame = this.cursors.space.isDown ? 100 : 150;
+    const prevVelocity = this.aura.body.velocity.clone();
+    this.aura.body.setVelocity(0);
+
+    if (this.sprite.scene.input.enabled && !this.trapped) {
       if (this.cursors.left.isDown) {
-        this.sprite.body.setVelocityX(-speed);
+        this.aura.body.setVelocityX(-speed);
         this.sprite.anims.play("left", true);
       } else if (this.cursors.right.isDown) {
-        this.sprite.body.setVelocityX(speed);
+        this.aura.body.setVelocityX(speed);
         this.sprite.anims.play("right", true);
       } else if (this.cursors.up.isDown) {
-        this.sprite.body.setVelocityY(-speed);
+        this.aura.body.setVelocityY(-speed);
         this.sprite.anims.play("back", true);
       } else if (this.cursors.down.isDown) {
-        this.sprite.body.setVelocityY(speed);
+        this.aura.body.setVelocityY(speed);
         this.sprite.anims.play("front", true);
       } else {
         stopMovement(prevVelocity, this.sprite)
       }
     } else {
-      stopMovement(prevVelocity, this.sprite)
+      if (this.trapped) {
+        const anims = this.sprite.anims;
+        if (!anims.currentAnim.key.includes('-')) {
+          const trappedAnimKey = `${anims.currentAnim.key}-hit`;
+          anims.stop();
+          this.sprite.on('animationcomplete', this.animComplete, this);
+          anims.play(trappedAnimKey, true);
+        }
+      } else {
+        stopMovement(prevVelocity, this.sprite)
+      }
     }
-    this.sprite.body.velocity.normalize().scale(speed);
+    this.aura.body.velocity.normalize().scale(speed);
+  }
+  animComplete(animation, frame) {
+    const damageAnims = ["back-hit", "front-hit", "hit.left.", "right-hit"];
+    if (damageAnims.includes(animation.key)) {
+      this.sprite.anims.play('box', true);
+    }
   }
 
   destroy() {

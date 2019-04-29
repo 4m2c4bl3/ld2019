@@ -1,0 +1,36 @@
+{"frames": {
+
+"overlay1":
+{
+	"frame": {"x":1,"y":1,"w":360,"h":498},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":360,"h":498},
+	"sourceSize": {"w":360,"h":498}
+},
+"overlay2":
+{
+	"frame": {"x":363,"y":1,"w":360,"h":498},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":360,"h":498},
+	"sourceSize": {"w":360,"h":498}
+},
+"overlay3":
+{
+	"frame": {"x":725,"y":1,"w":360,"h":498},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":360,"h":498},
+	"sourceSize": {"w":360,"h":498}
+}},
+"meta": {
+	"app": "https://www.codeandweb.com/texturepacker",
+	"version": "1.0",
+	"image": "overlays.png",
+	"format": "RGBA8888",
+	"size": {"w":1086,"h":500},
+	"scale": "1",
+	"smartupdate": "$TexturePacker:SmartUpdate:5aa715ee3f72b2a2146369ae128f52f1:cb3602763d4b37787a75b1a41f71b5b2:3e3fdb9952b3a9403ddef30418cea9dc$"
+}
+}
