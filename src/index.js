@@ -9,7 +9,7 @@ const config = {
   type: Phaser.AUTO,
   // pixelArt: true,
   scale: {
-    parent: "run-for-it",
+    parent: "get-away",
     mode: Phaser.Scale.FIT,
     autoCenter: Phaser.Scale.CENTER_BOTH,
     width: gameRatio.width,
@@ -84,15 +84,13 @@ function create() {
   const spawnPoint = map.findObject("spawn", obj => obj.name === "spawn_point");
   const escapeTrigger = map.findObject("escape", obj => obj.name === "escape");
 
-  map.createStaticLayer("escape")
-
   const marks = map.addTilesetImage("marks", "marks");
   const floor_base = map.addTilesetImage("floor_base", "floor_base");
 
   const baseLayer = map.createStaticLayer("base", floor_base, 0, 0);
   baseLayer.setCollisionByProperty({ collides: true });
   const trapsLayer = map.createStaticLayer("traps", marks, 0, 0);
-  trapsLayer.setCollisionByProperty({ collides: true });
+  trapsLayer.setCollision(4);
   const filteredTiles = trapsLayer.filterTiles(filterByTrap);
   filteredTiles.forEach((tile) => createshine(tile, this));
 
@@ -137,37 +135,55 @@ function create() {
   directions.setScale(0.3).setDepth(1000);
   this.input.disable(this.player.aura.scene);
   this.input.keyboard.on('keydown-SPACE', () => { directions.destroy(); this.input.enable(this.player.aura.scene); });
+
 }
 
 function fadeSceneRestart(player, time, scene) {
   if (scene.systems.input.enabled) {
     scene.systems.input.disable(player.aura.scene);
     scene.systems.cameras.main.fadeEffect.start(true, 400, 0, 0, 0);
-    const sceneRestartTimer = time.delayedCall(1 * 1000, () => { scene.restart();}, [scene], this)
+    const sceneRestartTimer = time.delayedCall(1 * 1000, () => { scene.restart(); }, [scene], this)
   }
 }
 
 function triggerTrap(sprite, tile) {
   const centerSprite = sprite.body.center;
-  const triggerX = (centerSprite.x > tile.getCenterX() && Math.abs(centerSprite.x - tile.getCenterX()) < tile.width / 2) || (centerSprite.x < tile.getCenterX() && Math.abs(tile.getCenterX() - centerSprite.x) < tile.width / 2);
-  const triggerY = (centerSprite.y > tile.getCenterY() && Math.abs(centerSprite.y - tile.getCenterY()) < tile.height / 2) || (centerSprite.y < tile.getCenterY() && Math.abs(tile.getCenterY() - centerSprite.y) < tile.height / 2);
+  const triggerX = (centerSprite.x > tile.getCenterX() && Math.abs(centerSprite.x - tile.getCenterX()) < tile.width / 3) || (centerSprite.x < tile.getCenterX() && Math.abs(tile.getCenterX() - centerSprite.x) < tile.width / 3);
+  const triggerY = (centerSprite.y > tile.getCenterY() && Math.abs(centerSprite.y - tile.getCenterY()) < tile.height / 3) || (centerSprite.y < tile.getCenterY() && Math.abs(tile.getCenterY() - centerSprite.y) < tile.height / 3);
+  
   if (triggerX && triggerY) {
-    this.player.aura.remove(this.alert, true)
+    if (this.alert) {
+      this.alert.destroy();
+      this.alert = undefined;
+    }
     this.player.trapped = true;
     fadeSceneRestart(this.player, this.time, this.scene);
-  } else if (!this.player.aura.exists(this.alert)) {
-    this.alert = this.add.image(0, -80, "alert");
+  } else if (!this.alert && sprite.body.touching !== sprite.body.wasTouching) {
+    this.alert = this.add.image(this.player.aura.body.center.x, this.player.aura.body.center.y - 30, "alert");
     this.alert.name = 'exclamation mark';
-    this.player.aura.add(this.alert);
-    this.player.aura.getByName('exclamation mark').setDepth(1000);
-    this.player.aura
-    this.player.aura.setDepth(5);
-    const hideAlert = this.time.delayedCall(200, () => this.player.aura.remove(this.alert, true), [], this);
+    this.alert.setScale(0.3).setDepth(2000);
+    if (!this.tweens.isTweening(this.alert)) {
+      this.tweens.add({
+        targets: this.alert,
+        props: {y: {value: this.alert.y - 20, duration: 300, ease: 'Elastic.easeOut'}}
+      })
+    } 
+    const hideAlert = this.time.delayedCall(350, () => { if (this.alert) { this.alert.destroy(); this.alert = undefined; } }, [], this);
   }
-  return false;
+  this.lastTouching = sprite.body.touching.none;
+  return true;
 };
 
 function update(time, delta) {
   this.player.update();
   this.playTime.update();
+  if (this.alert && !this.tweens.isTweening(this.alert)) {
+    this.alert.setPosition(this.player.aura.body.center.x, this.player.aura.body.center.y - 30);
+  }
+  this.player.aura.body.embedded ? this.player.auda.body.touching.none = false: null;
+  if (this.player.aura.body.touching.none && !this.player.aura.body.wasTouching.none) {
+    console.log('fart');
+  }
+  // console.log(this.player.aura.body.touching, this.player.aura.body.embedded);
+  // console.log(this.theyrFuckingOverlapping);
 }
