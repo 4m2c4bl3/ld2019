@@ -62,18 +62,18 @@ function preload() {
     percentText.destroy();
   });
 
-  this.load.image("marks", './assets/marks.png');
-  this.load.image("house", './assets/house.png');
-  this.load.image("directions", './assets/directions.png')
-  this.load.image("floor_base", './assets/floor_base.png');
-  this.load.image("trees_front", './assets/trees_front.png');
-  this.load.image("trees_back", './assets/trees_back.png');
-  this.load.image("alert", "./assets/strong_exclamation.png");
-  this.load.image("forest_floor", "./assets/forest_floor.png");
-  this.load.tilemapTiledJSON("map", "./assets/forest1.json");
-  this.load.atlas("sprite", "./assets/sprite-0.png", "./assets/sprite-0.json");
-  this.load.atlas("overlays", "./assets/overlays.png", "./assets/overlays.json");
-  this.load.atlas("effects", "./assets/effects.png", "./assets/effects.json");
+  this.load.image("marks", 'assets/marks.png');
+  this.load.image("house", 'assets/house.png');
+  this.load.image("directions", 'assets/directions.png')
+  this.load.image("floor_base", 'assets/floor_base.png');
+  this.load.image("trees_front", 'assets/trees_front.png');
+  this.load.image("trees_back", 'assets/trees_back.png');
+  this.load.image("alert", "assets/strong_exclamation.png");
+  this.load.image("forest_floor", "assets/forest_floor.png");
+  this.load.tilemapTiledJSON("map", "assets/forest1.json");
+  this.load.atlas("sprite", "assets/sprite-0.png", "assets/sprite-0.json");
+  this.load.atlas("overlays", "assets/overlays.png", "assets/overlays.json");
+  this.load.atlas("effects", "assets/effects.png", "assets/effects.json");
 }
 
 function create() {
