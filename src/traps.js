@@ -1,8 +1,9 @@
 import Phaser from "phaser";
+import depth from "./depth";
 
 export default class Traps {
-  constructor({scene, map, player, callback}) {
-    this.scene = scene;
+  constructor({parent, map, player, callback}) {
+    this.parent = parent;
     this.player = player;
     this.fadeSceneRestart = callback;
     this.alert;
@@ -10,16 +11,17 @@ export default class Traps {
     const marks = map.addTilesetImage("marks", "marks");
     trapsLayer.setCollision(4);
     const filteredTiles = trapsLayer.filterTiles(filterByTrap);
-    filteredTiles.forEach((tile) => createshine(tile, this.scene));
+    filteredTiles.forEach((tile) => createshine(tile, this.parent));
 
     function filterByTrap(tile) {return tile.properties.collides;}
     function createshine(tile, scene) {
-      let shine = scene.add.sprite(tile.getCenterX(), tile.getCenterY(), "effects", "shine.0").setScale(0.3).setDepth(100);
+      let shine = scene.add.sprite(tile.getCenterX(), tile.getCenterY(), "effects", "shine.0").setScale(0.3).setDepth(depth.shine);
       shine.anims.play("shine", true);
+      this.parent.physics.world.enable(shine, 0);
       // game.debug.renderSpriteBounds(shine);
     }
 
-    this.scene.physics.add.overlap(this.player.aura, trapsLayer);
+    this.parent.physics.add.overlap(this.player.aura, trapsLayer);
     trapsLayer.setTileIndexCallback([4], this.triggerTrap, this);
   }
 
@@ -34,30 +36,26 @@ export default class Traps {
         this.alert = undefined;
       }
       this.player.trapped = true;
-      this.fadeSceneRestart(this.player, this.scene.time, this.scene.scene);
+      this.parent.time.delayedCall(350, () => this.fadeSceneRestart(this.player, this.parent.time, this.parent.scene), [], this);
     } else if (!this.alert && sprite.body.touching !== sprite.body.wasTouching) {
-      this.alert = this.scene.add.image(this.player.aura.body.center.x, this.player.aura.body.center.y - 30, "alert");
+      this.alert = this.parent.add.image(this.player.aura.body.center.x, this.player.aura.body.center.y - 30, "alert");
       this.alert.name = 'exclamation mark';
-      this.alert.setScale(0.3).setDepth(2000);
-      if (!this.scene.tweens.isTweening(this.alert)) {
-        this.scene.tweens.add({
+      this.alert.setScale(0.3).setDepth(depth.alert);
+      if (!this.parent.tweens.isTweening(this.alert)) {
+        this.parent.tweens.add({
           targets: this.alert,
           props: {y: {value: this.alert.y - 20, duration: 300, ease: 'Elastic.easeOut'}}
         })
       }
-      const hideAlert = this.scene.time.delayedCall(350, () => {if (this.alert) {this.alert.destroy(); this.alert = undefined;} }, [], this);
+      const hideAlert = this.parent.time.delayedCall(350, () => {if (this.alert) {this.alert.destroy(); this.alert = undefined;} }, [], this);
     }
     this.lastTouching = sprite.body.touching.none;
     return true;
   };
 
   update() {
-    if (this.alert && !this.scene.tweens.isTweening(this.alert)) {
+    if (this.alert && !this.parent.tweens.isTweening(this.alert)) {
       this.alert.setPosition(this.player.aura.body.center.x, this.player.aura.body.center.y - 30);
-    }
-    this.player.aura.body.embedded ? this.player.auda.body.touching.none = false : null;
-    if (this.player.aura.body.touching.none && !this.player.aura.body.wasTouching.none) {
-      console.log('fart');
     }
     // console.log(this.player.aura.body.touching, this.player.aura.body.embedded);
     // console.log(this.theyrFuckingOverlapping);

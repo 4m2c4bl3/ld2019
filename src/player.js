@@ -1,25 +1,31 @@
 import Phaser from "phaser";
+import depth from "./depth";
 
 export default class Player {
-  constructor(scene, x, y) {
-    this.scene = scene;
+  constructor({parent, x, y}) {
+    this.parent = parent;
     this.trapped = false;
-    this.aura = this.scene.add.container(x, y);
-    this.sprite = this.scene.add.sprite(0, 0, "sprite", "sprite.back.0");
+    this.aura = this.parent.add.container(x, y);
+    this.sprite = this.parent.add.sprite(0, 0, "sprite", "sprite.back.0");
     this.sprite.name = "player sprite";
     this.aura.setSize(200, 200);
     this.aura.add(this.sprite);
-    this.aura.getByName('player sprite').setDepth(1);
-    this.scene.physics.world.add(this.aura);
-    this.scene.physics.world.enable(this.aura);
+    this.aura.getByName('player sprite').setDepth(depth.player);
+    this.parent.physics.world.add(this.aura);
+    this.parent.physics.world.enable(this.aura);
     this.aura.setScale(0.25);
     this.aura.body.setCircle(25, 80, 150)
     this.aura.body.setCollideWorldBounds(true);
 
-    this.cursors = this.scene.input.keyboard.createCursorKeys();
+    this.cursors = this.parent.input.keyboard.createCursorKeys();
   }
 
   update() {
+
+    this.aura.body.embedded ? this.aura.body.touching.none = false : null;
+    if (this.aura.body.touching.none && !this.aura.body.wasTouching.none) {
+      console.log('fart');
+    }
     function stopMovement(prevVelocity, sprite) {
       sprite.anims.stop();
       if (prevVelocity.x < 0) sprite.setTexture("sprite", "sprite.left.0");
