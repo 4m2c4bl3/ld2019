@@ -124,6 +124,28 @@ export default class Animations {
       repeat: -1,
       repeatDelay: 1 * 1000
     });
+    anims.create({
+      key: "escaped-message-draw",
+      frames: anims.generateFrameNames("escaped_message", {
+        prefix: "escaped_message.",
+        start: 0,
+        end: 9,
+        zeroPad: 0
+      }),
+      frameRate: 4,
+      repeat: 0
+    });
+    anims.create({
+      key: "escaped-message-loop",
+      frames: anims.generateFrameNames("escaped_message", {
+        prefix: "escaped_message.",
+        start: 8,
+        end: 9,
+        zeroPad: 0
+      }),
+      frameRate: 3,
+      repeat: -1
+    });
   }
 
 }

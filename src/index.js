@@ -4,6 +4,7 @@ import Player from "./player";
 import Timer from './timer';
 import Traps from "./traps";
 import depth from "./depth";
+import Escape from "./escape";
 
 const gameRatio = { width: 9 * 32, height: 15 * 32 };
 
@@ -25,7 +26,7 @@ const config = {
   physics: {
     default: "arcade",
     arcade: {
-      debug: true,
+      // debug: true,
       gravity: { y: 0 }
     }
   }
@@ -71,11 +72,13 @@ function preload() {
   this.load.image("trees_front", 'assets/trees_front.png');
   this.load.image("trees_back", 'assets/trees_back.png');
   this.load.image("alert", "assets/strong_exclamation.png");
+  this.load.image("space_bar", "assets/space_bar.png");
   this.load.image("forest_floor", "assets/forest_floor.png");
   this.load.tilemapTiledJSON("map", "assets/forest1.json");
   this.load.atlas("sprite", "assets/sprite-0.png", "assets/sprite-0.json");
   this.load.atlas("overlays", "assets/overlays.png", "assets/overlays.json");
   this.load.atlas("effects", "assets/effects.png", "assets/effects.json");
+  this.load.atlas("escaped_message", "assets/escaped_message.png", "assets/escaped_message.json");
 }
 
 function create() {
@@ -102,13 +105,9 @@ function create() {
   this.physics.add.collider(this.player.aura, baseLayer, null, null, this);
   this.physics.add.collider(this.player.aura, frontScenery, null, null, this);
 
-  const escapeObject = map.findObject("escape", obj => obj.name === "escape");
-  this.escapeZone = this.add.polygon(escapeObject.x, escapeObject.y, escapeObject.polygon).setOrigin(0, 0);
-  this.physics.world.enable(this.escapeZone, 0);
-
-  this.traps = new Traps({parent: this, map: map, player: this.player, callback: fadeSceneRestart})
+  this.traps = new Traps({ parent: this, map: map, player: this.player, callback: fadeSceneRestart })
   this.playTime = new Timer({ parent: this, time: this.time, input: this.input, callback: (time) => fadeSceneRestart(this.player, time, this.scene) });
-  this.physics.add.overlap(this.player.aura, this.escapeZone, () => escape({ scene: this.scene, player: this.player, playTime: this.playTime }));
+  this.escape = new Escape({parent: this, map, player: this.player, playTime: this.playTime, callback: fadeSceneRestart})
 
   //add physics
 
@@ -124,18 +123,11 @@ function create() {
   directions.scrollFactor = 0;
   directions.setScale(0.3).setDepth(depth.directions);
   this.input.disable(this.player.aura.scene);
-  this.input.keyboard.on('keydown-SPACE', () => { directions.destroy(); this.input.enable(this.player.aura.scene); });
+  this.input.keyboard.once('keydown-SPACE', () => { directions.destroy(); this.input.enable(this.player.aura.scene); });
 }
-function escape({scene, player, playTime}) {
-  if (!playTime.timer.paused) {
-    playTime.timer.paused = true;
-  }
-  scene.systems.input.disable(player.aura.scene);
-  playTime.overrideAlpha = 1;
-  return true;
-}
-function fadeSceneRestart(player, time, scene) {
-  if (scene.systems.input.enabled) {
+
+function fadeSceneRestart(player, time, scene, escaped = false) {
+  if (scene.systems.input.enabled || escaped) {
     scene.systems.input.disable(player.aura.scene);
     scene.systems.cameras.main.fadeEffect.start(true, 400, 0, 0, 0);
     const sceneRestartTimer = time.delayedCall(1 * 1000, () => { scene.restart(); }, [scene], this)

@@ -5,6 +5,7 @@ const depth = {
   house: "4",
   alert: "5",
   overlay: "6",
-  directions: "7"
+  directions: "7",
+  escaped: "8"
 };
 export default depth;

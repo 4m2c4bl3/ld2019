@@ -151,7 +151,7 @@
         <key>autoAliasEnabled</key>
         <true/>
         <key>trimSpriteNames</key>
-        <false/>
+        <true/>
         <key>prependSmartFolderName</key>
         <false/>
         <key>autodetectAnimations</key>
@@ -181,7 +181,20 @@
         </struct>
         <key>individualSpriteSettings</key>
         <map type="IndividualSpriteSettingsMap">
-            <key type="filename">escaped_message/escaped_message_0000_Layer-20.png</key>
+            <key type="filename">escaped_message.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>60,55,120,109</rect>
+                <key>scale9Paddings</key>
+                <rect>60,55,120,109</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
+            <key type="filename">escaped_message/escaped_message.0.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>
@@ -194,7 +207,7 @@
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
-            <key type="filename">escaped_message/escaped_message_0001_Layer-21.png</key>
+            <key type="filename">escaped_message/escaped_message.1.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>
@@ -207,7 +220,7 @@
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
-            <key type="filename">escaped_message/escaped_message_0002_Layer-22.png</key>
+            <key type="filename">escaped_message/escaped_message.2.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>
@@ -220,7 +233,7 @@
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
-            <key type="filename">escaped_message/escaped_message_0003_Layer-23.png</key>
+            <key type="filename">escaped_message/escaped_message.3.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>
@@ -233,7 +246,7 @@
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
-            <key type="filename">escaped_message/escaped_message_0004_Layer-24.png</key>
+            <key type="filename">escaped_message/escaped_message.4.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>
@@ -246,7 +259,7 @@
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
-            <key type="filename">escaped_message/escaped_message_0005_Layer-25.png</key>
+            <key type="filename">escaped_message/escaped_message.5.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>
@@ -259,7 +272,7 @@
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
-            <key type="filename">escaped_message/escaped_message_0006_Layer-26.png</key>
+            <key type="filename">escaped_message/escaped_message.6.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>
@@ -272,7 +285,7 @@
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
-            <key type="filename">escaped_message/escaped_message_0007_Layer-27.png</key>
+            <key type="filename">escaped_message/escaped_message.7.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>
@@ -285,7 +298,7 @@
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
-            <key type="filename">escaped_message/escaped_message_0008_Layer-28.png</key>
+            <key type="filename">escaped_message/escaped_message.8.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>
@@ -298,7 +311,7 @@
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
-            <key type="filename">escaped_message/escaped_message_0009_Layer-29.png</key>
+            <key type="filename">escaped_message/escaped_message.9.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>
@@ -315,6 +328,7 @@
         <key>fileList</key>
         <array>
             <filename>escaped_message</filename>
+            <filename>escaped_message.png</filename>
         </array>
         <key>ignoreFileList</key>
         <array/>
