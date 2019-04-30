@@ -4,16 +4,16 @@ ludum dare 2019 game. theme is 'your life is currency'.
 i went with a very circular approach to the theme, and didn't really get to express it in the game. (oh well) player character is trying to escape from someone who views them as simply an object of value, to use for whatever nefarous plans they want.
 
 ### timeline goals
-v 1 released by may 4th
-v 1.5 released by may 11th
-v 2 released by june 1st 
+* 1.0.0 released by may 4th
+* 1.5.0 released by may 6th
+* 2.0.0 released by may 12th 
 
 ## to-do for 1.0.0
 * finish v1 map graphics
 * finish trapped animation
 * character animation on timer loss (collapse)
 
-## to-do for 1.0.5
+## to-do for 1.5.0
 * sound
 * opening cutscene on game load (skippable with keypress)
 * ending cutscene on success (skippable with keypress)
