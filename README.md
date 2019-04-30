@@ -4,7 +4,6 @@ ludum dare 2019 game. theme is 'your life is currency'.
 i went with a very circular approach to the theme, and didn't really get to express it in the game. (oh well) player character is trying to escape from someone who views them as simply an object of value, to use for whatever nefarous plans they want.
 
 ## to-do
-* debug trap alert
 * create victory animation & game restart
 * finish v1 map graphics
 * finish trapped animation

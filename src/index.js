@@ -1,11 +1,11 @@
 import Phaser from "phaser";
+import Animations from "./anims";
 import Player from "./player";
 import Timer from './timer';
-import Animations from "./anims";
 import Traps from "./traps";
 import depth from "./depth";
 
-const gameRatio = {width: 9 * 32, height: 15 * 32};
+const gameRatio = { width: 9 * 32, height: 15 * 32 };
 
 const config = {
   type: Phaser.AUTO,
@@ -25,8 +25,8 @@ const config = {
   physics: {
     default: "arcade",
     arcade: {
-      // debug: true,
-      gravity: {y: 0}
+      debug: true,
+      gravity: { y: 0 }
     }
   }
 };
@@ -87,7 +87,7 @@ function create() {
 
   const floor_base = map.addTilesetImage("floor_base", "floor_base");
   const baseLayer = map.createStaticLayer("base", floor_base, 0, 0);
-  baseLayer.setCollisionByProperty({collides: true});
+  baseLayer.setCollisionByProperty({ collides: true });
 
   this.add.image(0, 0, "forest_floor").setOrigin(0, 0);
   this.add.image(0, 0, "trees_back").setOrigin(0, 0);
@@ -98,21 +98,17 @@ function create() {
 
   //create classes
 
-  this.player = new Player({parent: this, x: spawnPoint.x, y: spawnPoint.y});
+  this.player = new Player({ parent: this, x: spawnPoint.x, y: spawnPoint.y });
   this.physics.add.collider(this.player.aura, baseLayer, null, null, this);
   this.physics.add.collider(this.player.aura, frontScenery, null, null, this);
 
-
   const escapeObject = map.findObject("escape", obj => obj.name === "escape");
-  const escapeZone = new Phaser.Geom.Polygon(escapeObject.polygon);
-  this.physics.world.enable(escapeZone, 0);  
-  escapeZone.body.setAllowGravity(false);
-  escapeZone.body.moves = false;
-  this.physics.add.overlap(this.player.aura.body, escapeZone, escape, null, this);
+  this.escapeZone = this.add.polygon(escapeObject.x, escapeObject.y, escapeObject.polygon).setOrigin(0, 0);
+  this.physics.world.enable(this.escapeZone, 0);
 
-
-  // this.traps = new Traps({parent: this, map: map, player: this.player, callback: fadeSceneRestart})
-  // this.playTime = new Timer({ parent: this, time: this.time, input: this.input, callback: (time) => fadeSceneRestart(this.player, time, this.scene) });
+  this.traps = new Traps({parent: this, map: map, player: this.player, callback: fadeSceneRestart})
+  this.playTime = new Timer({ parent: this, time: this.time, input: this.input, callback: (time) => fadeSceneRestart(this.player, time, this.scene) });
+  this.physics.add.overlap(this.player.aura, this.escapeZone, () => escape({ scene: this.scene, player: this.player, playTime: this.playTime }));
 
   //add physics
 
@@ -128,22 +124,26 @@ function create() {
   directions.scrollFactor = 0;
   directions.setScale(0.3).setDepth(depth.directions);
   this.input.disable(this.player.aura.scene);
-  this.input.keyboard.on('keydown-SPACE', () => {directions.destroy(); this.input.enable(this.player.aura.scene);});
+  this.input.keyboard.on('keydown-SPACE', () => { directions.destroy(); this.input.enable(this.player.aura.scene); });
 }
-function escape(){
-  console.log('farty');
+function escape({scene, player, playTime}) {
+  if (!playTime.timer.paused) {
+    playTime.timer.paused = true;
+  }
+  scene.systems.input.disable(player.aura.scene);
+  playTime.overrideAlpha = 1;
   return true;
 }
 function fadeSceneRestart(player, time, scene) {
   if (scene.systems.input.enabled) {
     scene.systems.input.disable(player.aura.scene);
     scene.systems.cameras.main.fadeEffect.start(true, 400, 0, 0, 0);
-    const sceneRestartTimer = time.delayedCall(1 * 1000, () => {scene.restart();}, [scene], this)
+    const sceneRestartTimer = time.delayedCall(1 * 1000, () => { scene.restart(); }, [scene], this)
   }
 }
 
 function update(time, delta) {
   this.player.update();
-  this.traps &&  this.traps.update();
+  this.traps && this.traps.update();
   this.playTime && this.playTime.update();
 }

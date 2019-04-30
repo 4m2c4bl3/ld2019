@@ -21,11 +21,8 @@ export default class Player {
   }
 
   update() {
-
     this.aura.body.embedded ? this.aura.body.touching.none = false : null;
-    if (this.aura.body.touching.none && !this.aura.body.wasTouching.none) {
-      console.log('fart');
-    }
+    
     function stopMovement(prevVelocity, sprite) {
       sprite.anims.stop();
       if (prevVelocity.x < 0) sprite.setTexture("sprite", "sprite.left.0");
