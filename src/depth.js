@@ -1,4 +1,5 @@
 const depth = {
+  trap: "0",
   player: "1",
   shine: "2",
   trees: "3",

@@ -8,8 +8,9 @@ export default class Timer {
         this.parent = parent;
         this.overrideAlpha;
         this.timerAlpha;
+        this.delay = 20;
 
-        this.timer = this.time.addEvent({ delay: 15 * 1000, callback: callback, args: [this.time], callbackScope: this });
+        this.timer = this.time.addEvent({ delay: this.delay * 1000, callback: callback, args: [this.time], callbackScope: this });
         this.timer.paused = true;
         this.input.keyboard.once('keydown-SPACE', () => this.timer.paused = false);
 
