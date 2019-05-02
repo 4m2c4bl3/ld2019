@@ -12,8 +12,8 @@ i went with a very circular approach to the theme, and didn't really get to expr
 * finish v1 map graphics
 * character animation on timer loss (collapse)
 * trailing effect on player movement
- * put effect behind - understand properly how depth works
- * position effect lower down to where player's feet are vs mid body
+ - put effect behind - understand properly how depth works
+ - position effect lower down to where player's feet are vs mid body
 
 ## to-do for 1.5.0
 * sound
