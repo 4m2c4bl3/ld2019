@@ -24,6 +24,7 @@ export default class Player {
     this.aura.setSize(200, 200);
     this.aura.add(this.sprite);
     this.aura.getByName('player sprite').setDepth(depth.player);
+    this.aura.setDepth(depth.player);
     this.parent.physics.world.add(this.aura);
     this.parent.physics.world.enable(this.aura);
     this.aura.setScale(0.25);
@@ -35,7 +36,8 @@ export default class Player {
 
   drawNewBlood(target){
     const newBlood = this.parent.add.image(target.x, target.y, 'blood');
-    newBlood.setDepth(depth.blood).setScale(0.3).setOrigin(0, 0).setAlpha(target.type !== 'Container' ? target.alpha - (target.alpha/4).toFixed(3) : 1);
+    const scaleVariable = Math.random() * (0.2 - 0.4) + 0.2;
+    newBlood.setDepth(depth.blood).setScale(scaleVariable).setAlpha(target.type !== 'Container' ? target.alpha - (target.alpha/4).toFixed(3) : 1);
     newBlood.blendMode = 'MULTIPLY';
     return newBlood;
   }
@@ -45,8 +47,8 @@ export default class Player {
       this.startStep = {...this.aura.body.position};
       this.bloodDistance = Math.random() * (40 - 80) + 40;
     }
-    if (Math.abs(this.startStep.x - this.aura.body.position.x) > this.bloodDistance || Math.abs(this.startStep.y - this.aura.body.position.y) > this.bloodDistance) {
-      const blood = this.drawNewBlood(this.aura);
+    else if (Math.abs(this.startStep.x - this.aura.body.position.x) > this.bloodDistance || Math.abs(this.startStep.y - this.aura.body.position.y) > this.bloodDistance) {
+      const blood = this.drawNewBlood({...this.aura, y: this.aura.y + 10});
       this.bloodTrail.push({blood, deposited: this.parent.time.now});
       this.startStep = undefined;
     }
@@ -54,7 +56,9 @@ export default class Player {
 
   update() {
     this.aura.body.embedded ? this.aura.body.touching.none = false : null;
+    if (this.parent.input.enabled){
     this.drawBloodTrail();
+    }
     function stopMovement(prevVelocity, sprite) {
       sprite.anims.stop();
       if (prevVelocity.x < 0) sprite.setTexture("sprite", "sprite.left.0");
