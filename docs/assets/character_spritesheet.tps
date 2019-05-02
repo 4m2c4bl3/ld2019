@@ -246,8 +246,8 @@
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
-            <key type="filename">trap_back/trap_back-0.png</key>
-            <key type="filename">trap_back/trap_back-1.png</key>
+            <key type="filename">trap_back/trap_back.0.png</key>
+            <key type="filename">trap_back/trap_back.1.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>
