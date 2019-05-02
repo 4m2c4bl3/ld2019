@@ -1,8 +1,8 @@
 import Phaser from "phaser";
-import depth from "./depth";
+import {depth} from "./../mazeVariables";
 
 export default class Player {
-  constructor({parent, x, y}) {
+  constructor({ parent, x, y }) {
     this.parent = parent;
     this.trapped = false;
     this.aura = this.parent.add.container(x, y);
@@ -22,7 +22,7 @@ export default class Player {
 
   update() {
     this.aura.body.embedded ? this.aura.body.touching.none = false : null;
-    
+
     function stopMovement(prevVelocity, sprite) {
       sprite.anims.stop();
       if (prevVelocity.x < 0) sprite.setTexture("sprite", "sprite.left.0");
@@ -53,11 +53,19 @@ export default class Player {
         stopMovement(prevVelocity, this.sprite)
       }
     } else {
-      if (this.trapped) {
+      if (this.trapped && this.sprite.anims.currentAnim.key !== 'box') {
         const anims = this.sprite.anims;
         if (!anims.currentAnim.key.includes('-')) {
           const trappedAnimKey = `${anims.currentAnim.key}-hit`;
           anims.stop();
+
+          const trap = this.parent.add.sprite(0, 0, "sprite", "trap_back.0");
+          trap.name = "trap"
+          this.aura.add(trap);
+          this.aura.swap(trap, this.sprite);
+          this.aura.getByName('trap').setDepth(depth.trap);
+          trap.anims.play('trap', true);
+
           this.sprite.on('animationcomplete', this.animComplete, this);
           anims.play(trappedAnimKey, true);
         }
@@ -70,6 +78,7 @@ export default class Player {
   animComplete(animation, frame) {
     const damageAnims = ["back-hit", "front-hit", "hit.left.", "right-hit"];
     if (damageAnims.includes(animation.key)) {
+      this.aura.remove(this.aura.getByName('trap'), true);
       this.sprite.anims.play('box', true);
     }
   }

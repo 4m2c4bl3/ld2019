@@ -1,0 +1,1 @@
+export const gameRatio = { width: 9 * 32, height: 15 * 32 };

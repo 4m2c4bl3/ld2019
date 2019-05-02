@@ -20,43 +20,39 @@
          "name":"escape",
          "objects":[
                 {
-                 "height":0,
-                 "id":106,
-                 "name":"escape",
-                 "polygon":[
-                        {
-                         "x":0,
-                         "y":0
-                        }, 
-                        {
-                         "x":0,
-                         "y":44
-                        }, 
-                        {
-                         "x":55,
-                         "y":46
-                        }, 
-                        {
-                         "x":57,
-                         "y":131
-                        }, 
-                        {
-                         "x":143,
-                         "y":131
-                        }, 
-                        {
-                         "x":144,
-                         "y":0
-                        }],
+                 "height":42,
+                 "id":108,
+                 "name":"",
                  "rotation":0,
-                 "type":"",
+                 "type":"escape",
                  "visible":true,
-                 "width":0,
-                 "x":785,
-                 "y":-1
+                 "width":56,
+                 "x":783.333333333333,
+                 "y":1.33333333333333
+                }, 
+                {
+                 "height":129.333333333333,
+                 "id":109,
+                 "name":"",
+                 "rotation":0,
+                 "type":"escape",
+                 "visible":true,
+                 "width":86,
+                 "x":840.666666666667,
+                 "y":0.666666666666667
                 }],
          "opacity":1,
          "type":"objectgroup",
+         "visible":true,
+         "x":0,
+         "y":0
+        }, 
+        {
+         "id":12,
+         "image":"",
+         "name":"Image Layer 4",
+         "opacity":1,
+         "type":"imagelayer",
          "visible":true,
          "x":0,
          "y":0
@@ -460,8 +456,8 @@
          "x":0,
          "y":0
         }],
- "nextlayerid":12,
- "nextobjectid":107,
+ "nextlayerid":13,
+ "nextobjectid":111,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.2.3",

@@ -102,6 +102,17 @@ export default class Animations {
       repeat: 0
     });
     anims.create({
+      key: "trap",
+      frames: anims.generateFrameNames("sprite", {
+        prefix: "trap_back.",
+        start: 0,
+        end: 1,
+        zeroPad: 0
+      }),
+      frameRate: 15,
+      repeat: 0
+    });
+    anims.create({
       key: "overlay",
       frames: anims.generateFrameNames("overlays", {
         prefix: "overlay",
