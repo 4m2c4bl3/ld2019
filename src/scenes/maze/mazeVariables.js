@@ -1,11 +1,12 @@
 export const depth = {
-  trap: "0",
-  player: "1",
-  shine: "2",
-  trees: "3",
-  house: "4",
-  alert: "5",
-  overlay: "6",
-  directions: "7",
-  escaped: "8"
+  blood: 1,
+  trap: 2,
+  player: 3,
+  shine: 4,
+  trees: 5,
+  house: 6,
+  alert: 7,
+  overlay: 8,
+  directions: 9,
+  escaped: 10
 };

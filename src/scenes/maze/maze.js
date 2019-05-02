@@ -33,7 +33,7 @@ export default class MazeScene extends Phaser.Scene {
 
         //create classes
 
-        this.player = new Player({ parent: this, x: spawnPoint.x, y: spawnPoint.y });
+        this.player = new Player({ parent: this, x: spawnPoint.x, y: spawnPoint.y , bloodTrail: this.player ? this.player.bloodTrail : undefined});
         this.physics.add.collider(this.player.aura, baseLayer, null, null, this);
         this.physics.add.collider(this.player.aura, frontScenery, null, null, this);
 
@@ -62,7 +62,7 @@ export default class MazeScene extends Phaser.Scene {
         if (scene.systems.input.enabled || escaped) {
             scene.systems.input.disable(player.aura.scene);
             scene.systems.cameras.main.fadeEffect.start(true, 400, 0, 0, 0);
-            const sceneRestartTimer = time.delayedCall(1 * 1000, () => { scene.restart(); }, [scene], this)
+            const sceneRestartTimer = time.delayedCall(1 * 1000, () => { scene.restart({bloodHistory: this.player.bloodTrail}); }, [scene], this)
         }
     }
 

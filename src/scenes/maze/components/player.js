@@ -2,10 +2,23 @@ import Phaser from "phaser";
 import {depth} from "./../mazeVariables";
 
 export default class Player {
-  constructor({ parent, x, y }) {
+  constructor({parent, x, y, bloodTrail}) {
     this.parent = parent;
     this.trapped = false;
     this.aura = this.parent.add.container(x, y);
+
+
+
+    this.bloodTrail = [];
+    bloodTrail && bloodTrail.forEach(({blood, deposited}) => {
+      if (blood.alpha > 0) {
+        const newBlood = this.drawNewBlood(blood);
+        this.bloodTrail.push({blood: newBlood, deposited});
+      }
+    })
+    this.aura.add(this.bloodTrail);
+
+
     this.sprite = this.parent.add.sprite(0, 0, "sprite", "sprite.back.0");
     this.sprite.name = "player sprite";
     this.aura.setSize(200, 200);
@@ -20,9 +33,28 @@ export default class Player {
     this.cursors = this.parent.input.keyboard.createCursorKeys();
   }
 
+  drawNewBlood(target){
+    const newBlood = this.parent.add.image(target.x, target.y, 'blood');
+    newBlood.setDepth(depth.blood).setScale(0.3).setOrigin(0, 0).setAlpha(target.type !== 'Container' ? target.alpha - (target.alpha/4).toFixed(3) : 1);
+    newBlood.blendMode = 'MULTIPLY';
+    return newBlood;
+  }
+
+  drawBloodTrail() {
+    if (!this.startStep) {
+      this.startStep = {...this.aura.body.position};
+      this.bloodDistance = Math.random() * (40 - 80) + 40;
+    }
+    if (Math.abs(this.startStep.x - this.aura.body.position.x) > this.bloodDistance || Math.abs(this.startStep.y - this.aura.body.position.y) > this.bloodDistance) {
+      const blood = this.drawNewBlood(this.aura);
+      this.bloodTrail.push({blood, deposited: this.parent.time.now});
+      this.startStep = undefined;
+    }
+  }
+
   update() {
     this.aura.body.embedded ? this.aura.body.touching.none = false : null;
-
+    this.drawBloodTrail();
     function stopMovement(prevVelocity, sprite) {
       sprite.anims.stop();
       if (prevVelocity.x < 0) sprite.setTexture("sprite", "sprite.left.0");

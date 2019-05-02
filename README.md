@@ -10,8 +10,10 @@ i went with a very circular approach to the theme, and didn't really get to expr
 
 ## to-do for 1.0.0
 * finish v1 map graphics
-* finish trapped animation
 * character animation on timer loss (collapse)
+* trailing effect on player movement
+ * put effect behind - understand properly how depth works
+ * position effect lower down to where player's feet are vs mid body
 
 ## to-do for 1.5.0
 * sound
@@ -22,6 +24,5 @@ i went with a very circular approach to the theme, and didn't really get to expr
 
 ## to-do for 2.0.0
 * simon says minigame before maze portion to increase or decrease time allowed
-* trailing effect on player movement
 * virtual keyboard
 * high scores?
