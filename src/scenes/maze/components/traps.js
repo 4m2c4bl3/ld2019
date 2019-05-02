@@ -1,5 +1,6 @@
 import Phaser from "phaser";
 import {depth} from './../mazeVariables'
+import Pathfinder from './pathfinder';
 
 export default class Traps {
   constructor({ parent, map, player, callback }) {
@@ -7,6 +8,8 @@ export default class Traps {
     this.player = player;
     this.fadeSceneRestart = callback;
     this.alert;
+    this.pathFinder = new Pathfinder({parent: parent, map: map, player: player});
+
     const trapsLayer = map.createStaticLayer("traps", marks, 0, 0);
     const marks = map.addTilesetImage("marks", "marks");
     trapsLayer.setCollision(4);
@@ -60,5 +63,6 @@ export default class Traps {
     if (this.alert && !this.parent.tweens.isTweening(this.alert)) {
       this.alert.setPosition(this.player.aura.body.center.x, this.player.aura.body.center.y - 30);
     }
+    this.pathFinder.update();
   }
 }
