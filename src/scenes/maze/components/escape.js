@@ -1,5 +1,5 @@
 import Phaser from "phaser";
-import depth from "./depth";
+import {depth} from './../mazeVariables'
 
 export default class Escape {
     constructor({ parent, map, player, playTime, callback }) {

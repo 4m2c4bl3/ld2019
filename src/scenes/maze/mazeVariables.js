@@ -1,4 +1,4 @@
-const depth = {
+export const depth = {
   trap: "0",
   player: "1",
   shine: "2",
@@ -9,4 +9,3 @@ const depth = {
   directions: "7",
   escaped: "8"
 };
-export default depth;
