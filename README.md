@@ -11,7 +11,7 @@ i went with a very circular approach to the theme, and didn't really get to expr
 ## to-do for 1.0.0
 * finish v1 map graphics
 * trailing effect on player movement (graphics)
-* traps move position when you start a new game (open browser page/beat the game and restart)
+* traps reveal themselves more once you get the ! alert
 
 ## to-do for 1.5.0
 * sound
