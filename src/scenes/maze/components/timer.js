@@ -20,15 +20,11 @@ export default class Timer {
         this.overlay.anims.play('overlay', true);
     }
     update() {
-        this.timerAlpha = ((Math.ceil(this.timer.elapsed / 1000) * 15).toFixed(3) / 100) - 0.4;
+        this.timerAlpha = (Math.ceil(this.timer.elapsed / 1000)  / this.overrideDelay).toFixed(3) - 0.05;
         this.overlay.setAlpha(this.overrideAlpha ? this.overrideAlpha.progress : this.timerAlpha < 0 ? 0 : this.timerAlpha);
         this.overlay.setPosition(this.parent.cameras.main.midPoint.x, this.parent.cameras.main.midPoint.y);
         if (this.overrideDelay && this.delay !== this.overrideDelay) {
             this.delay = this.overrideDelay;
-        }
-        if (Math.ceil(this.timer.elapsed / 1000) > this.timerLastUpdate) {
-
-            console.log(this.overrideDelay, Math.ceil(this.timer.elapsed / 1000))
         }
         this.timerLastUpdate = Math.ceil(this.timer.elapsed / 1000);
     }
