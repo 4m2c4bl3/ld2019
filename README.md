@@ -14,7 +14,6 @@ i went with a very circular approach to the theme, and didn't really get to expr
    - trap revealed effects
    - entire map base
    - map canopy
-   - collapse anim
 
 ## to-do for 1.5.0
 * sound
