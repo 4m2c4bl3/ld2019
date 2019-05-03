@@ -1,4 +1,4 @@
-import Phaser from "phaser";
+import Phaser from 'phaser';
 import {depth} from './../mazeVariables'
 
 export default class Timer {
@@ -14,9 +14,9 @@ export default class Timer {
         this.timer.paused = true;
         this.input.keyboard.once('keydown-SPACE', () => this.timer.paused = false);
 
-        this.overlay = this.parent.add.sprite(this.parent.cameras.main.midPoint.x, this.parent.cameras.main.midPoint.y, "overlays", "overlay1").setAlpha(0.75).setDepth(depth.overlay);
+        this.overlay = this.parent.add.sprite(this.parent.cameras.main.midPoint.x, this.parent.cameras.main.midPoint.y, 'overlays', 'overlay1').setAlpha(0.75).setDepth(depth.overlay);
         this.overlay.blendMode = 'MULTIPLY';
-        this.overlay.anims.play("overlay", true);
+        this.overlay.anims.play('overlay', true);
     }
     update() {
         this.timerAlpha = ((Math.ceil(this.timer.elapsed / 1000) * 15).toFixed(3) / 100) - 0.3;

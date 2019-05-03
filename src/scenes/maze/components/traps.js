@@ -1,4 +1,4 @@
-import Phaser from "phaser";
+import Phaser from 'phaser';
 import { depth } from './../mazeVariables'
 import Pathfinder from './pathfinder';
 
@@ -11,8 +11,8 @@ export default class Traps {
     this.pathFinder = new Pathfinder({ parent: parent, map: map, }); //use to keep regenerating paths;
     this.pathFinder.testPath();
 
-    const trapsLayer = map.createStaticLayer("traps", marks, 0, 0);
-    const marks = map.addTilesetImage("marks", "marks");
+    const trapsLayer = map.createStaticLayer('traps', marks, 0, 0);
+    const marks = map.addTilesetImage('marks', 'marks');
     trapsLayer.setCollision(1);
 
     const filteredTiles = trapsLayer.filterTiles((tile) => tile.properties.id === 1);
@@ -26,9 +26,9 @@ export default class Traps {
   }
 
   createshine(tile, scene, ) {
-    let shine = scene.add.sprite(tile.getCenterX(), tile.getCenterY(), "effects", "shine.0").setScale(0.3).setDepth(depth.shine);
+    let shine = scene.add.sprite(tile.getCenterX(), tile.getCenterY(), 'effects', 'shine.0').setScale(0.3).setDepth(depth.shine);
     let shineHitbox = scene.add.rect
-    shine.anims.play("shine", true);
+    shine.anims.play('shine', true);
     scene.physics.world.enable(shine, 0);
   }
   triggerTrap(sprite, tile) {
@@ -44,7 +44,7 @@ export default class Traps {
       this.player.trapped = true;
       this.parent.time.delayedCall(350, () => this.fadeSceneRestart(this.player, this.parent.time, this.parent.scene), [], this);
     } else if (!this.alert && !this.player.aura.body.touching.none && this.player.aura.body.wasTouching.none) {
-      this.alert = this.parent.add.image(this.player.aura.body.center.x, this.player.aura.body.center.y - 30, "alert");
+      this.alert = this.parent.add.image(this.player.aura.body.center.x, this.player.aura.body.center.y - 30, 'alert');
       this.alert.name = 'exclamation mark';
       this.alert.setScale(0.3).setDepth(depth.alert);
       if (!this.parent.tweens.isTweening(this.alert)) {

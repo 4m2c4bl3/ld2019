@@ -1,4 +1,4 @@
-import Phaser from "phaser";
+import Phaser from 'phaser';
 import {depth} from './../mazeVariables'
 
 export default class Escape {
@@ -9,7 +9,7 @@ export default class Escape {
         this.fadeSceneRestart = callback;
         this.escapeZones = this.parent.add.container(0, 0);
 
-        const escapeObjects = map.filterObjects("escape", obj => obj.type === "escape");
+        const escapeObjects = map.filterObjects('escape', obj => obj.type === 'escape');
         escapeObjects.forEach((escapeObject) => {
             const escapeZone = this.parent.add.rectangle(escapeObject.x, escapeObject.y, escapeObject.width, escapeObject.height).setOrigin(0, 0);
             this.parent.physics.world.enable(escapeZone, 0);
@@ -20,9 +20,9 @@ export default class Escape {
     }
 
     animComplete(animation, frame) {
-        if (animation.key === "escaped-message-draw") {
+        if (animation.key === 'escaped-message-draw') {
             this.escapedText.anims.play('escaped-message-loop', true);
-            this.parent.add.image(this.parent.camera.midPoint.x, this.parent.camera.midPoint.y + 70, "space_bar").setScale(0.3).setDepth(depth.directions);
+            this.parent.add.image(this.parent.camera.midPoint.x, this.parent.camera.midPoint.y + 70, 'space_bar').setScale(0.3).setDepth(depth.directions);
         }
     }
 
@@ -34,14 +34,14 @@ export default class Escape {
             const startTime = this.playTime.timerAlpha < 0 ? 0 : this.playTime.timerAlpha;
             this.playTime.overrideAlpha = this.parent.scene.systems.tweens.addCounter({ from: startTime, to: 1, duration: 250 });
 
-            this.overlay = this.parent.add.sprite(this.parent.cameras.main.midPoint.x, this.parent.cameras.main.midPoint.y, "overlays", "overlay1").setAlpha(0.75).setDepth(depth.overlay);
+            this.overlay = this.parent.add.sprite(this.parent.cameras.main.midPoint.x, this.parent.cameras.main.midPoint.y, 'overlays', 'overlay1').setAlpha(0.75).setDepth(depth.overlay);
             this.overlay.blendMode = 'MULTIPLY';
-            this.overlay.anims.play("overlay", true);
-            const escapedSprite = this.parent.add.sprite(this.parent.camera.midPoint.x, this.parent.camera.midPoint.y - 30, "sprite", "sprite.right.0").setScale(0.4).setDepth(depth.escaped);
+            this.overlay.anims.play('overlay', true);
+            const escapedSprite = this.parent.add.sprite(this.parent.camera.midPoint.x, this.parent.camera.midPoint.y - 30, 'sprite', 'sprite.right.0').setScale(0.4).setDepth(depth.escaped);
             escapedSprite.anims.play(this.player.sprite.anims.currentAnim.key, true);
             escapedSprite.anims.msPerFrame = 500;
-            this.escapedText = this.parent.add.sprite(this.parent.camera.midPoint.x, this.parent.camera.midPoint.y + 30, "escaped_message", "escaped_message.0").setScale(0.5).setDepth(depth.escaped);
-            this.escapedText.anims.play("escaped-message-draw", true);
+            this.escapedText = this.parent.add.sprite(this.parent.camera.midPoint.x, this.parent.camera.midPoint.y + 30, 'escaped_message', 'escaped_message.0').setScale(0.5).setDepth(depth.escaped);
+            this.escapedText.anims.play('escaped-message-draw', true);
             this.escapedText.on('animationcomplete', this.animComplete, this);
 
             return true;

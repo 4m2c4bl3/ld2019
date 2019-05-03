@@ -1,4 +1,4 @@
-import Phaser from "phaser";
+import Phaser from 'phaser';
 import EasyStar from 'easystarjs';
 
 export default class Pathfinder {

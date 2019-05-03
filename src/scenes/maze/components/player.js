@@ -1,5 +1,5 @@
-import Phaser from "phaser";
-import {depth} from "./../mazeVariables";
+import Phaser from 'phaser';
+import {depth} from './../mazeVariables';
 
 export default class Player {
   constructor({parent, x, y, bloodTrail}) {
@@ -15,8 +15,8 @@ export default class Player {
       }
     })
 
-    this.sprite = this.parent.add.sprite(0, 0, "sprite", "sprite.back.0");
-    this.sprite.name = "player sprite";
+    this.sprite = this.parent.add.sprite(0, 0, 'sprite', 'sprite.back.0');
+    this.sprite.name = 'player sprite';
     this.aura.setSize(200, 200);
     this.aura.add(this.sprite);
     this.aura.getByName('player sprite').setDepth(depth.player);
@@ -57,10 +57,10 @@ export default class Player {
     }
     function stopMovement(prevVelocity, sprite) {
       sprite.anims.stop();
-      if (prevVelocity.x < 0) sprite.setTexture("sprite", "sprite.left.0");
-      else if (prevVelocity.x > 0) sprite.setTexture("sprite", "sprite.right.0");
-      else if (prevVelocity.y < 0) sprite.setTexture("sprite", "sprite.back.0");
-      else if (prevVelocity.y > 0) sprite.setTexture("sprite", "sprite.front.0");
+      if (prevVelocity.x < 0) sprite.setTexture('sprite', 'sprite.left.0');
+      else if (prevVelocity.x > 0) sprite.setTexture('sprite', 'sprite.right.0');
+      else if (prevVelocity.y < 0) sprite.setTexture('sprite', 'sprite.back.0');
+      else if (prevVelocity.y > 0) sprite.setTexture('sprite', 'sprite.front.0');
     }
 
     const speed = this.cursors.space.isDown ? 175 : 120;
@@ -71,16 +71,16 @@ export default class Player {
     if (this.sprite.scene.input.enabled && !this.trapped) {
       if (this.cursors.left.isDown) {
         this.aura.body.setVelocityX(-speed);
-        this.sprite.anims.play("left", true);
+        this.sprite.anims.play('left', true);
       } else if (this.cursors.right.isDown) {
         this.aura.body.setVelocityX(speed);
-        this.sprite.anims.play("right", true);
+        this.sprite.anims.play('right', true);
       } else if (this.cursors.up.isDown) {
         this.aura.body.setVelocityY(-speed);
-        this.sprite.anims.play("back", true);
+        this.sprite.anims.play('back', true);
       } else if (this.cursors.down.isDown) {
         this.aura.body.setVelocityY(speed);
-        this.sprite.anims.play("front", true);
+        this.sprite.anims.play('front', true);
       } else {
         stopMovement(prevVelocity, this.sprite)
       }
@@ -91,8 +91,8 @@ export default class Player {
           const trappedAnimKey = `${anims.currentAnim.key}-hit`;
           anims.stop();
 
-          const trap = this.parent.add.sprite(0, 0, "sprite", "trap_back.0");
-          trap.name = "trap"
+          const trap = this.parent.add.sprite(0, 0, 'sprite', 'trap_back.0');
+          trap.name = 'trap'
           this.aura.add(trap);
           this.aura.swap(trap, this.sprite);
           this.aura.getByName('trap').setDepth(depth.trap);
@@ -108,7 +108,7 @@ export default class Player {
     this.aura.body.velocity.normalize().scale(speed);
   }
   animComplete(animation, frame) {
-    const damageAnims = ["back-hit", "front-hit", "hit.left.", "right-hit"];
+    const damageAnims = ['back-hit', 'front-hit', 'hit.left.', 'right-hit'];
     if (damageAnims.includes(animation.key)) {
       this.aura.remove(this.aura.getByName('trap'), true);
       this.sprite.anims.play('box', true);
