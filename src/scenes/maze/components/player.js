@@ -7,8 +7,6 @@ export default class Player {
     this.trapped = false;
     this.aura = this.parent.add.container(x, y);
 
-
-
     this.bloodTrail = [];
     bloodTrail && bloodTrail.forEach(({blood, deposited}) => {
       if (blood.alpha > 0) {
@@ -16,8 +14,6 @@ export default class Player {
         this.bloodTrail.push({blood: newBlood, deposited});
       }
     })
-    this.aura.add(this.bloodTrail);
-
 
     this.sprite = this.parent.add.sprite(0, 0, "sprite", "sprite.back.0");
     this.sprite.name = "player sprite";
