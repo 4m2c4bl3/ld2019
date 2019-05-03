@@ -1,5 +1,5 @@
 import Phaser from "phaser";
-import {depth} from './../mazeVariables'
+import { depth } from './../mazeVariables'
 import Pathfinder from './pathfinder';
 
 export default class Traps {
@@ -8,29 +8,29 @@ export default class Traps {
     this.player = player;
     this.fadeSceneRestart = callback;
     this.alert;
-    this.pathFinder = new Pathfinder({parent: parent, map: map, player: player});
+    this.pathFinder = new Pathfinder({ parent: parent, map: map, }); //use to keep regenerating paths;
+    this.pathFinder.testPath();
 
     const trapsLayer = map.createStaticLayer("traps", marks, 0, 0);
     const marks = map.addTilesetImage("marks", "marks");
-    trapsLayer.setCollision(4);
+    trapsLayer.setCollision(1);
 
-    const filteredTiles = trapsLayer.filterTiles(filterByTrap);
+    const filteredTiles = trapsLayer.filterTiles((tile) => tile.properties.id === 1);
     filteredTiles.forEach((tile) => {
-      createshine(tile, this.parent);
+      this.createshine(tile, this.parent);
       const tileObject = this.parent.add.rectangle(tile.getCenterX(), tile.getCenterY(), tile.width, tile.height);
       this.parent.physics.world.enable(tileObject, 0);
       this.parent.physics.add.overlap(this.player.aura, tileObject, this.triggerTrap, null, this);
     });
 
-    function filterByTrap(tile) { return tile.properties.collides; }
-    function createshine(tile, scene, ) {
-      let shine = scene.add.sprite(tile.getCenterX(), tile.getCenterY(), "effects", "shine.0").setScale(0.3).setDepth(depth.shine);
-      let shineHitbox = scene.add.rect
-      shine.anims.play("shine", true);
-      scene.physics.world.enable(shine, 0);
-    }
   }
 
+  createshine(tile, scene, ) {
+    let shine = scene.add.sprite(tile.getCenterX(), tile.getCenterY(), "effects", "shine.0").setScale(0.3).setDepth(depth.shine);
+    let shineHitbox = scene.add.rect
+    shine.anims.play("shine", true);
+    scene.physics.world.enable(shine, 0);
+  }
   triggerTrap(sprite, tile) {
     const centerSprite = sprite.body.center;
     const triggerX = (centerSprite.x > tile.body.center.x && Math.abs(centerSprite.x - tile.body.center.x) < tile.width / 3) || (centerSprite.x < tile.body.center.x && Math.abs(tile.body.center.x - centerSprite.x) < tile.width / 3);
