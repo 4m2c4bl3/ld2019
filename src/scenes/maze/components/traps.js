@@ -11,9 +11,10 @@ export default class Traps {
     this.pathFinder = new Pathfinder({ parent: parent, map: map, }); //use to keep regenerating paths;
     this.pathFinder.testPath();
 
+    const marks = map.addTilesetImage('trap marks', 'marks');
     const trapsLayer = map.createStaticLayer('traps', marks, 0, 0);
-    const marks = map.addTilesetImage('marks', 'marks');
     trapsLayer.setCollision(1);
+    trapsLayer.visible = false;
 
     const filteredTiles = trapsLayer.filterTiles((tile) => tile.properties.id === 1);
     filteredTiles.forEach((tile) => {
@@ -25,13 +26,13 @@ export default class Traps {
 
   }
 
-  createshine(tile, scene, ) {
+  createshine = (tile, scene) => {
     let shine = scene.add.sprite(tile.getCenterX(), tile.getCenterY(), 'effects', 'shine.0').setScale(0.3).setDepth(depth.shine);
     let shineHitbox = scene.add.rect
     shine.anims.play('shine', true);
     scene.physics.world.enable(shine, 0);
   }
-  triggerTrap(sprite, tile) {
+  triggerTrap = (sprite, tile) => {
     const centerSprite = sprite.body.center;
     const triggerX = (centerSprite.x > tile.body.center.x && Math.abs(centerSprite.x - tile.body.center.x) < tile.width / 3) || (centerSprite.x < tile.body.center.x && Math.abs(tile.body.center.x - centerSprite.x) < tile.width / 3);
     const triggerY = (centerSprite.y > tile.body.center.y && Math.abs(centerSprite.y - tile.body.center.y) < tile.height / 3) || (centerSprite.y < tile.body.center.y && Math.abs(tile.body.center.y - centerSprite.y) < tile.height / 3);
@@ -59,7 +60,7 @@ export default class Traps {
     return true;
   };
 
-  update() {
+  update = () => {
     if (this.alert && !this.parent.tweens.isTweening(this.alert)) {
       this.alert.setPosition(this.player.aura.body.center.x, this.player.aura.body.center.y - 30);
     }

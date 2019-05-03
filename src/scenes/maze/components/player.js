@@ -30,7 +30,7 @@ export default class Player {
     this.cursors = this.parent.input.keyboard.createCursorKeys();
   }
 
-  drawNewBlood(target){
+  drawNewBlood = (target) => {
     const newBlood = this.parent.add.image(target.x, target.y, 'blood');
     const scaleVariable = Math.random() * (0.2 - 0.4) + 0.2;
     newBlood.setDepth(depth.blood).setScale(scaleVariable).setAlpha(target.type !== 'Container' ? target.alpha - (target.alpha/4).toFixed(3) : 1);
@@ -38,7 +38,7 @@ export default class Player {
     return newBlood;
   }
 
-  drawBloodTrail() {
+  drawBloodTrail = () => {
     if (!this.startStep) {
       this.startStep = {...this.aura.body.position};
       this.bloodDistance = Math.random() * (40 - 80) + 40;
@@ -50,7 +50,7 @@ export default class Player {
     }
   }
 
-  update() {
+  update = () => {
     this.aura.body.embedded ? this.aura.body.touching.none = false : null;
     if (this.parent.input.enabled){
     this.drawBloodTrail();

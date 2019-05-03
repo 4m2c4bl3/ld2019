@@ -22,14 +22,14 @@ export default class Pathfinder {
     this.pathFinder.setAcceptableTiles([1])
   }
 
-  drawPath() {
+  drawPath = () => {
     this.path.forEach(pathItem => {
       const baseTile = this.map.findTile(tile => tile.x === pathItem.x && tile.y === pathItem.y)
       this.parent.add.image(baseTile.pixelX, baseTile.pixelY, 'blood').setOrigin(0, 0);
     })
   }
 
-  testPath () {
+  testPath = () => {
     this.path = undefined;
     this.pathFinder.findPath(0, Math.floor(this.base.height) - 1, Math.floor(this.base.width - 1 / 29), Math.floor(0 / 29), (path) => {
       if (path) {
