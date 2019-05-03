@@ -1,25 +1,30 @@
 import Phaser from 'phaser';
-import { depth } from './../mazeVariables'
+import {depth} from './../mazeVariables'
 import Pathfinder from './pathfinder';
 
 export default class Traps {
-  constructor({ parent, map, player, callback }) {
+  constructor({parent, map, player, callback, newGame}) {
     this.parent = parent;
     this.player = player;
     this.fadeSceneRestart = callback;
     this.alert;
-    this.pathFinder = new Pathfinder({ parent: parent, map: map}); //use to keep regenerating paths;
+    this.pathFinder = new Pathfinder({parent, map}); //use to keep regenerating paths;
 
+    this.createTraps(map)
+  }
+
+  createTraps = (map) => {
     const marks = map.addTilesetImage('trap marks', 'marks');
-    const trapsLayer = map.createDynamicLayer('traps', marks, 0, 0);
-    trapsLayer.visible = false;
+    this.trapsLayer = map.createDynamicLayer('traps', marks, 0, 0);
+    this.trapsLayer.visible = false;
 
     //red traps are static, always there
-    const redTrapGroup = trapsLayer.filterTiles((tile) => tile.properties.id === 1);
+    const redTrapGroup = this.trapsLayer.filterTiles((tile) => tile.properties.id === 1);
     this.drawNewTrapGroup(redTrapGroup);
-    this.drawDynamicTraps(trapsLayer);
-    trapsLayer.setCollision([0, 1, 2, 3, 4, 5, 6]);
+    this.drawDynamicTraps();
+    this.trapsLayer.setCollision([0, 1, 2, 3, 4, 5, 6]);
     this.pathFinder.testPath();
+
   }
 
   drawNewTrapGroup = (trapGroup) => {
@@ -31,23 +36,24 @@ export default class Traps {
     });
   }
 
-  drawDynamicTraps = (trapsLayer) => {
-    const yellowTrapGroup = this.prepareDynamicTrapGroup({trapsLayer, id: 2});
+  drawDynamicTraps = () => {
+    this.deletedTiles = [];
+    const yellowTrapGroup = this.prepareDynamicTrapGroup(2);
     this.drawNewTrapGroup(yellowTrapGroup);
-    const greenTrapGroup = this.prepareDynamicTrapGroup({trapsLayer, id: 3});
+    const greenTrapGroup = this.prepareDynamicTrapGroup(3);
     this.drawNewTrapGroup(greenTrapGroup);
-    const tealTrapGroup = this.prepareDynamicTrapGroup({trapsLayer, id: 4});
+    const tealTrapGroup = this.prepareDynamicTrapGroup(4);
     this.drawNewTrapGroup(tealTrapGroup);
-    const blueTrapGroup = this.prepareDynamicTrapGroup({trapsLayer, id: 5});
+    const blueTrapGroup = this.prepareDynamicTrapGroup(5);
     this.drawNewTrapGroup(blueTrapGroup);
-    const purpleTrapGroup = this.prepareDynamicTrapGroup({trapsLayer, id: 6});
+    const purpleTrapGroup = this.prepareDynamicTrapGroup(6);
     this.drawNewTrapGroup(purpleTrapGroup);
   }
 
-  prepareDynamicTrapGroup = ({trapsLayer, id}) => {
-    const newTrapGroup = trapsLayer.filterTiles((tile) => tile.properties.id === id);
-    const removedTrap = (Math.random()*(newTrapGroup.length - 1)).toFixed();
-    trapsLayer.removeTileAt(newTrapGroup[removedTrap].x, newTrapGroup[removedTrap].y, false)
+  prepareDynamicTrapGroup = (id) => {
+    const newTrapGroup = this.trapsLayer.filterTiles((tile) => tile.properties.id === id);
+    const removedTrap = (Math.random() * (newTrapGroup.length - 1)).toFixed();
+    this.trapsLayer.removeTileAt(newTrapGroup[removedTrap].x, newTrapGroup[removedTrap].y, false)
     newTrapGroup.splice(removedTrap, 1)
     return newTrapGroup;
   }
@@ -77,10 +83,10 @@ export default class Traps {
       if (!this.parent.tweens.isTweening(this.alert)) {
         this.parent.tweens.add({
           targets: this.alert,
-          props: { y: { value: this.alert.y - 20, duration: 300, ease: 'Elastic.easeOut' } }
+          props: {y: {value: this.alert.y - 20, duration: 300, ease: 'Elastic.easeOut'}}
         })
       }
-      const hideAlert = this.parent.time.delayedCall(350, () => { if (this.alert) { this.alert.destroy(); this.alert = undefined; } }, [], this);
+      const hideAlert = this.parent.time.delayedCall(350, () => {if (this.alert) {this.alert.destroy(); this.alert = undefined;} }, [], this);
     }
     this.lastTouching = sprite.body.touching.none;
     return true;
