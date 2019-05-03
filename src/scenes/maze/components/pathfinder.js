@@ -5,13 +5,16 @@ export default class Pathfinder {
   constructor({ parent, map }) {
     this.map = map;
     this.parent = parent;
+    this.debugging = false;
     this.pathFinder = new EasyStar.js();
+    this.tiles = [];
   }
 
   drawPath = () => {
     this.path.forEach(pathItem => {
       const baseTile = this.map.findTile(tile => tile.x === pathItem.x && tile.y === pathItem.y)
-      this.parent.add.image(baseTile.pixelX, baseTile.pixelY, 'blood').setOrigin(0, 0);
+      const baseTileImage = this.parent.add.image(baseTile.pixelX, baseTile.pixelY, 'blood').setOrigin(0, 0).setAlpha(0);
+      this.tiles.push(baseTileImage);
     })
   }
 
@@ -32,7 +35,7 @@ export default class Pathfinder {
     this.pathFinder.findPath(0, Math.floor(base.height) - 1, Math.floor(base.width - 1 / 29), Math.floor(0 / 29), (path) => {
       if (path) {
         this.path = path;
-        this.pathTime = this.path.length * 0.5;
+        this.pathTime = Math.ceil(this.path.length * 0.3);
         this.drawPath();
       }
     });
@@ -40,6 +43,11 @@ export default class Pathfinder {
   }
 
   update() {
+    if (this.tiles.length > 0 && this.debugging && this.tiles[0].alpha !== 1)
+    {
+      this.tiles.forEach(tile => tile.setAlpha(1));
+    }
+
   }
   
 }

@@ -10,3 +10,6 @@ export const depth = {
   directions: 9,
   escaped: 10
 };
+
+export const baseTrapTile = 1;
+export const dynamicTrapTiles = [2, 3, 4, 5, 6];

@@ -2,16 +2,16 @@ import Phaser from 'phaser';
 import {depth} from './../mazeVariables';
 
 export default class Player {
-  constructor({parent, x, y, bloodTrail}) {
+  constructor({parent, x, y}) {
     this.parent = parent;
     this.trapped = false;
     this.aura = this.parent.add.container(x, y);
 
     this.bloodTrail = [];
-    bloodTrail && bloodTrail.forEach(({blood, deposited}) => {
+    parent.bloodTrail && parent.bloodTrail.forEach(({blood}) => {
       if (blood.alpha > 0) {
-        const newBlood = this.drawNewBlood(blood);
-        this.bloodTrail.push({blood: newBlood, deposited});
+        const newBlood = blood.name !== 'trap' ? this.drawNewBlood(blood) : this.drawLargeBloodSplatter(blood);
+        this.bloodTrail.push({blood: newBlood});
       }
     })
 
@@ -27,6 +27,10 @@ export default class Player {
     this.aura.body.setCircle(25, 80, 150)
     this.aura.body.setCollideWorldBounds(true);
 
+
+    this.parent.physics.add.collider(this.aura, this.parent.map.baseLayer, null, null, this);
+    this.parent.physics.add.collider(this.aura, this.parent.map.frontScenery, null, null, this);
+
     this.cursors = this.parent.input.keyboard.createCursorKeys();
   }
 
@@ -38,6 +42,16 @@ export default class Player {
     return newBlood;
   }
 
+  drawLargeBloodSplatter = (target, fresh = false) => {
+    const newBlood = this.parent.add.image(target.x, target.y, 'blood');
+    const scaleVariable = Math.random() * 0.4;
+    newBlood.setDepth(depth.blood).setScale(scaleVariable);
+    newBlood.blendMode = 'MULTIPLY';
+    newBlood.name = 'trap';
+    fresh && this.bloodTrail.push({blood: newBlood});
+    return newBlood;
+  }
+
   drawBloodTrail = () => {
     if (!this.startStep) {
       this.startStep = {...this.aura.body.position};
@@ -45,7 +59,7 @@ export default class Player {
     }
     else if (Math.abs(this.startStep.x - this.aura.body.position.x) > this.bloodDistance || Math.abs(this.startStep.y - this.aura.body.position.y) > this.bloodDistance) {
       const blood = this.drawNewBlood({...this.aura, y: this.aura.y + 10});
-      this.bloodTrail.push({blood, deposited: this.parent.time.now});
+      this.bloodTrail.push({blood});
       this.startStep = undefined;
     }
   }

@@ -1,16 +1,19 @@
 import Phaser from 'phaser';
-import {depth} from './../mazeVariables'
+import {depth, baseTrapTile, dynamicTrapTiles} from './../mazeVariables'
 import Pathfinder from './pathfinder';
 
 export default class Traps {
-  constructor({parent, map, player, callback, removableTraps}) {
+  constructor(parent) {
     this.parent = parent;
-    this.player = player;
-    this.fadeSceneRestart = callback;
+    this.player = parent.player;
+    this.fadeSceneRestart = parent.fadeSceneRestart;
     this.alert;
-    this.pathFinder = new Pathfinder({parent, map}); //use to keep regenerating paths;
-    this.removableTraps = removableTraps || [];
-    this.createTraps(map)
+    this.pathFinder = new Pathfinder({parent, map: parent.map.tileMap}); //use to keep regenerating paths;
+    this.removableTraps = parent.removableTraps || [];
+    this.createTraps(parent.map.tileMap)
+
+    this.trapsSpotted = [];
+    parent.trapsSpotted && parent.trapsSpotted.forEach(trap => this.createTrapSpotted(trap))
   }
 
   createTraps = (map) => {
@@ -19,22 +22,21 @@ export default class Traps {
     this.trapsLayer.visible = false;
 
     //red traps are static, always there
-    const redTrapGroup = this.trapsLayer.filterTiles((tile) => tile.properties.id === 1);
+    const redTrapGroup = this.trapsLayer.filterTiles((tile) => tile.properties.id === baseTrapTile);
     this.drawNewTrapGroup(redTrapGroup);
-    if (this.removableTraps.length > 0 ) {
+    if (this.removableTraps.length > 0) {
       this.removableTraps.forEach((trap) => this.trapsLayer.removeTileAt(trap.x, trap.y, false))
-      this.drawNewTrapGroup(this.trapsLayer.filterTiles((tile) => tile.properties.id > 1));
+      this.drawNewTrapGroup(this.trapsLayer.filterTiles((tile) => tile.properties.id > baseTrapTile && tile.properties.id <= [...dynamicTrapTiles].pop()));
     } else {
       this.drawDynamicTraps();
     }
-    this.trapsLayer.setCollision([0, 1, 2, 3, 4, 5, 6]);
+    this.trapsLayer.setCollision([baseTrapTile, ...dynamicTrapTiles]);
     this.pathFinder.testPath();
-
   }
 
   drawNewTrapGroup = (trapGroup) => {
     trapGroup.forEach((tile) => {
-      this.createshine(tile, this.parent);
+      this.drawShine(tile, this.parent);
       const tileObject = this.parent.add.rectangle(tile.getCenterX(), tile.getCenterY(), tile.width, tile.height);
       this.parent.physics.world.enable(tileObject, 0);
       this.parent.physics.add.overlap(this.player.aura, tileObject, this.triggerTrap, null, this);
@@ -42,16 +44,10 @@ export default class Traps {
   }
 
   drawDynamicTraps = () => {
-    const yellowTrapGroup = this.prepareDynamicTrapGroup(2);
-    this.drawNewTrapGroup(yellowTrapGroup);
-    const greenTrapGroup = this.prepareDynamicTrapGroup(3);
-    this.drawNewTrapGroup(greenTrapGroup);
-    const tealTrapGroup = this.prepareDynamicTrapGroup(4);
-    this.drawNewTrapGroup(tealTrapGroup);
-    const blueTrapGroup = this.prepareDynamicTrapGroup(5);
-    this.drawNewTrapGroup(blueTrapGroup);
-    const purpleTrapGroup = this.prepareDynamicTrapGroup(6);
-    this.drawNewTrapGroup(purpleTrapGroup);
+    dynamicTrapTiles.forEach((tileIndex) => {
+      const trapGroup = this.prepareDynamicTrapGroup(tileIndex);
+      this.drawNewTrapGroup(trapGroup);
+    });
   }
 
   prepareDynamicTrapGroup = (id) => {
@@ -64,12 +60,19 @@ export default class Traps {
     return newTrapGroup;
   }
 
-  createshine = (tile, scene) => {
+  createTrapSpotted = (target) => {
+    const trapSpotted = this.parent.add.image(target.x, target.y, 'misc');
+    trapSpotted.setScale(0.7);
+    this.trapsSpotted.push(trapSpotted);
+  }
+
+  drawShine = (tile, scene) => {
     let shine = scene.add.sprite(tile.getCenterX(), tile.getCenterY(), 'effects', 'shine.0').setScale(0.3).setDepth(depth.shine);
-    let shineHitbox = scene.add.rect
+    scene.add.rect;
     shine.anims.play('shine', true);
     scene.physics.world.enable(shine, 0);
   }
+
   triggerTrap = (sprite, tile) => {
     const centerSprite = sprite.body.center;
     const triggerX = (centerSprite.x > tile.body.center.x && Math.abs(centerSprite.x - tile.body.center.x) < tile.width / 3) || (centerSprite.x < tile.body.center.x && Math.abs(tile.body.center.x - centerSprite.x) < tile.width / 3);
@@ -80,19 +83,25 @@ export default class Traps {
         this.alert.destroy();
         this.alert = undefined;
       }
+      this.player.drawLargeBloodSplatter(sprite.body, true);
       this.player.trapped = true;
       this.parent.time.delayedCall(350, () => this.fadeSceneRestart(this.player, this.parent.time, this.parent.scene), [], this);
     } else if (!this.alert && !this.player.aura.body.touching.none && this.player.aura.body.wasTouching.none) {
       this.alert = this.parent.add.image(this.player.aura.body.center.x, this.player.aura.body.center.y - 30, 'alert');
       this.alert.name = 'exclamation mark';
       this.alert.setScale(0.3).setDepth(depth.alert);
+
+      if (!this.trapsSpotted.find(trap => trap.x === tile.body.center.x && trap.y == tile.body.center.y)) {
+        this.createTrapSpotted(tile.body.center);
+      }
+
       if (!this.parent.tweens.isTweening(this.alert)) {
         this.parent.tweens.add({
           targets: this.alert,
           props: {y: {value: this.alert.y - 20, duration: 300, ease: 'Elastic.easeOut'}}
         })
       }
-      const hideAlert = this.parent.time.delayedCall(350, () => {if (this.alert) {this.alert.destroy(); this.alert = undefined;} }, [], this);
+      this.parent.time.delayedCall(350, () => {if (this.alert) {this.alert.destroy(); this.alert = undefined;} }, [], this);
     }
     this.lastTouching = sprite.body.touching.none;
     return true;

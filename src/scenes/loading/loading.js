@@ -51,6 +51,7 @@ export default class LoadingScene extends Phaser.Scene {
     this.load.atlas('effects', 'assets/effects.png', 'assets/effects.json');
     this.load.atlas('escaped_message', 'assets/escaped_message.png', 'assets/escaped_message.json');
     this.load.image('blood', 'assets/blood_temp.png');
+    this.load.image('misc', 'assets/grey_temp.png');
   }
 
   create = () => {

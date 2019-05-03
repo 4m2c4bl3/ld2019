@@ -1,15 +1,15 @@
 import Phaser from 'phaser';
-import { depth } from './../mazeVariables'
+import {depth} from './../mazeVariables'
 
 export default class Escape {
-  constructor({ parent, map, player, playTime, callback }) {
+  constructor(parent) {
     this.parent = parent;
-    this.player = player;
-    this.playTime = playTime;
-    this.fadeSceneRestart = callback;
+    this.player = parent.player;
+    this.playTime = parent.playTime;
+    this.fadeSceneRestart = parent.fadeSceneRestart;
     this.escapeZones = this.parent.add.container(0, 0);
 
-    const escapeObjects = map.filterObjects('escape', obj => obj.type === 'escape');
+    const escapeObjects = parent.map.tileMap.filterObjects('escape', obj => obj.type === 'escape');
     escapeObjects.forEach((escapeObject) => {
       const escapeZone = this.parent.add.rectangle(escapeObject.x, escapeObject.y, escapeObject.width, escapeObject.height).setOrigin(0, 0);
       this.parent.physics.world.enable(escapeZone, 0);
@@ -32,7 +32,7 @@ export default class Escape {
       this.playTime.timer.paused = true;
       this.parent.scene.systems.input.disable(this.player.aura.scene);
       const startTime = this.playTime.timerAlpha < 0 ? 0 : this.playTime.timerAlpha;
-      this.playTime.overrideAlpha = this.parent.scene.systems.tweens.addCounter({ from: startTime, to: 1, duration: 250 });
+      this.playTime.overrideAlpha = this.parent.scene.systems.tweens.addCounter({from: startTime, to: 1, duration: 250});
 
       this.overlay = this.parent.add.sprite(this.parent.cameras.main.midPoint.x, this.parent.cameras.main.midPoint.y, 'overlays', 'overlay1').setAlpha(0.75).setDepth(depth.overlay);
       this.overlay.blendMode = 'MULTIPLY';
