@@ -5,6 +5,7 @@ import Timer from './components/timer';
 import Traps from './components/traps';
 import Escape from './components/escape';
 import { depth } from './mazeVariables';
+import {Testing} from './testing';
 
 export default class MazeScene extends Phaser.Scene {
   constructor() {
@@ -16,12 +17,12 @@ export default class MazeScene extends Phaser.Scene {
   create = () => {
     const animations = new Animations(this.scene.scene.anims);
     //draw map
-    const baseMap = this.make.tilemap({ key: 'map' });
-    this.physics.world.setBounds(baseMap.x, baseMap.y, baseMap.widthInPixels, baseMap.heightInPixels, true, true, true, true);
-    const spawnPoint = baseMap.findObject('spawn', obj => obj.name === 'spawn_point');
+    const map = this.make.tilemap({ key: 'map' });
+    this.physics.world.setBounds(map.x, map.y, map.widthInPixels, map.heightInPixels, true, true, true, true);
+    const spawnPoint = map.findObject('spawn', obj => obj.name === 'spawn_point');
 
-    const floor_base = baseMap.addTilesetImage('floor_base', 'floor_base');
-    const baseLayer = baseMap.createStaticLayer('base', floor_base, 0, 0);
+    const floor_base = map.addTilesetImage('floor_base', 'floor_base');
+    const baseLayer = map.createStaticLayer('base', floor_base, 0, 0);
     baseLayer.setCollisionByProperty({ collides: true });
 
     this.add.image(0, 0, 'forest_floor').setOrigin(0, 0);
@@ -37,15 +38,15 @@ export default class MazeScene extends Phaser.Scene {
     this.physics.add.collider(this.player.aura, baseLayer, null, null, this);
     this.physics.add.collider(this.player.aura, frontScenery, null, null, this);
 
-    this.traps = new Traps({ parent: this, map: baseMap, player: this.player, callback: this.fadeSceneRestart })
+    this.traps = new Traps({ parent: this, map, player: this.player, callback: this.fadeSceneRestart })
     this.playTime = new Timer({ parent: this, time: this.time, input: this.input, callback: (time) => this.fadeSceneRestart(this.player, time, this.scene) });
-    this.escape = new Escape({ parent: this, map: baseMap, player: this.player, playTime: this.playTime, callback: this.fadeSceneRestart })
+    this.escape = new Escape({ parent: this, map, player: this.player, playTime: this.playTime, callback: this.fadeSceneRestart })
 
     //create camera
     this.camera = this.cameras.main;
     this.camera.zoom = 2;
     this.camera.startFollow(this.player.aura);
-    this.camera.setBounds(0, 0, baseMap.widthInPixels, baseMap.heightInPixels);
+    this.camera.setBounds(0, 0, map.widthInPixels, map.heightInPixels);
     this.camera.fadeEffect.start(false, 400, 0, 0, 0);
 
     //create startup
@@ -54,6 +55,8 @@ export default class MazeScene extends Phaser.Scene {
     directions.setScale(0.3).setDepth(depth.directions);
     this.input.disable(this.player.aura.scene);
     this.input.keyboard.once('keydown-SPACE', () => { directions.destroy(); this.input.enable(this.player.aura.scene); });
+
+    this.testingTools = new Testing({parent: this, map});
   }
 
   fadeSceneRestart = (player, time, scene, escaped = false) => {
@@ -68,5 +71,6 @@ export default class MazeScene extends Phaser.Scene {
     this.player.update();
     this.traps && this.traps.update();
     this.playTime && this.playTime.update();
+    this.testingTools && this.testingTools.update();
   }
 }

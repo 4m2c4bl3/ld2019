@@ -8,22 +8,48 @@ export default class Traps {
     this.player = player;
     this.fadeSceneRestart = callback;
     this.alert;
-    this.pathFinder = new Pathfinder({ parent: parent, map: map, }); //use to keep regenerating paths;
-    this.pathFinder.testPath();
+    this.pathFinder = new Pathfinder({ parent: parent, map: map}); //use to keep regenerating paths;
 
     const marks = map.addTilesetImage('trap marks', 'marks');
-    const trapsLayer = map.createStaticLayer('traps', marks, 0, 0);
-    trapsLayer.setCollision(1);
+    const trapsLayer = map.createDynamicLayer('traps', marks, 0, 0);
     trapsLayer.visible = false;
 
-    const filteredTiles = trapsLayer.filterTiles((tile) => tile.properties.id === 1);
-    filteredTiles.forEach((tile) => {
+    //red traps are static, always there
+    const redTrapGroup = trapsLayer.filterTiles((tile) => tile.properties.id === 1);
+    this.drawNewTrapGroup(redTrapGroup);
+    this.drawDynamicTraps(trapsLayer);
+    trapsLayer.setCollision([0, 1, 2, 3, 4, 5, 6]);
+    this.pathFinder.testPath();
+  }
+
+  drawNewTrapGroup = (trapGroup) => {
+    trapGroup.forEach((tile) => {
       this.createshine(tile, this.parent);
       const tileObject = this.parent.add.rectangle(tile.getCenterX(), tile.getCenterY(), tile.width, tile.height);
       this.parent.physics.world.enable(tileObject, 0);
       this.parent.physics.add.overlap(this.player.aura, tileObject, this.triggerTrap, null, this);
     });
+  }
 
+  drawDynamicTraps = (trapsLayer) => {
+    const yellowTrapGroup = this.prepareDynamicTrapGroup({trapsLayer, id: 2});
+    this.drawNewTrapGroup(yellowTrapGroup);
+    const greenTrapGroup = this.prepareDynamicTrapGroup({trapsLayer, id: 3});
+    this.drawNewTrapGroup(greenTrapGroup);
+    const tealTrapGroup = this.prepareDynamicTrapGroup({trapsLayer, id: 4});
+    this.drawNewTrapGroup(tealTrapGroup);
+    const blueTrapGroup = this.prepareDynamicTrapGroup({trapsLayer, id: 5});
+    this.drawNewTrapGroup(blueTrapGroup);
+    const purpleTrapGroup = this.prepareDynamicTrapGroup({trapsLayer, id: 6});
+    this.drawNewTrapGroup(purpleTrapGroup);
+  }
+
+  prepareDynamicTrapGroup = ({trapsLayer, id}) => {
+    const newTrapGroup = trapsLayer.filterTiles((tile) => tile.properties.id === id);
+    const removedTrap = (Math.random()*(newTrapGroup.length - 1)).toFixed();
+    trapsLayer.removeTileAt(newTrapGroup[removedTrap].x, newTrapGroup[removedTrap].y, false)
+    newTrapGroup.splice(removedTrap, 1)
+    return newTrapGroup;
   }
 
   createshine = (tile, scene) => {
