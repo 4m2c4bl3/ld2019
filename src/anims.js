@@ -1,11 +1,11 @@
-import Phaser from "phaser";
+import Phaser from 'phaser';
 
 export default class Animations {
   constructor(anims) {
     anims.create({
-      key: "left",
-      frames: anims.generateFrameNames("sprite", {
-        prefix: "sprite.left.",
+      key: 'left',
+      frames: anims.generateFrameNames('sprite', {
+        prefix: 'sprite.left.',
         start: 0,
         end: 3,
         zeroPad: 0
@@ -14,9 +14,9 @@ export default class Animations {
       repeat: -1
     });
     anims.create({
-      key: "left-hit",
-      frames: anims.generateFrameNames("sprite", {
-        prefix: "hit.left.",
+      key: 'left-hit',
+      frames: anims.generateFrameNames('sprite', {
+        prefix: 'hit.left.',
         start: 0,
         end: 2,
         zeroPad: 0
@@ -25,9 +25,9 @@ export default class Animations {
       repeat: 0
     });
     anims.create({
-      key: "right",
-      frames: anims.generateFrameNames("sprite", {
-        prefix: "sprite.right.",
+      key: 'right',
+      frames: anims.generateFrameNames('sprite', {
+        prefix: 'sprite.right.',
         start: 0,
         end: 3,
         zeroPad: 0
@@ -36,9 +36,9 @@ export default class Animations {
       repeat: -1
     });
     anims.create({
-      key: "right-hit",
-      frames: anims.generateFrameNames("sprite", {
-        prefix: "hit.right.",
+      key: 'right-hit',
+      frames: anims.generateFrameNames('sprite', {
+        prefix: 'hit.right.',
         start: 0,
         end: 2,
         zeroPad: 0
@@ -47,9 +47,9 @@ export default class Animations {
       repeat: 0
     });
     anims.create({
-      key: "front",
-      frames: anims.generateFrameNames("sprite", {
-        prefix: "sprite.front.",
+      key: 'front',
+      frames: anims.generateFrameNames('sprite', {
+        prefix: 'sprite.front.',
         start: 0,
         end: 3,
         zeroPad: 0
@@ -58,9 +58,9 @@ export default class Animations {
       repeat: -1
     });
     anims.create({
-      key: "front-hit",
-      frames: anims.generateFrameNames("sprite", {
-        prefix: "hit.front.",
+      key: 'front-hit',
+      frames: anims.generateFrameNames('sprite', {
+        prefix: 'hit.front.',
         start: 0,
         end: 2,
         zeroPad: 0
@@ -69,9 +69,9 @@ export default class Animations {
       repeat: 0
     });
     anims.create({
-      key: "back",
-      frames: anims.generateFrameNames("sprite", {
-        prefix: "sprite.back.",
+      key: 'back',
+      frames: anims.generateFrameNames('sprite', {
+        prefix: 'sprite.back.',
         start: 0,
         end: 3,
         zeroPad: 0
@@ -80,9 +80,9 @@ export default class Animations {
       repeat: -1
     });
     anims.create({
-      key: "back-hit",
-      frames: anims.generateFrameNames("sprite", {
-        prefix: "hit.back.",
+      key: 'back-hit',
+      frames: anims.generateFrameNames('sprite', {
+        prefix: 'hit.back.',
         start: 0,
         end: 2,
         zeroPad: 0
@@ -91,9 +91,9 @@ export default class Animations {
       repeat: 0
     });
     anims.create({
-      key: "box",
-      frames: anims.generateFrameNames("sprite", {
-        prefix: "box.",
+      key: 'box',
+      frames: anims.generateFrameNames('sprite', {
+        prefix: 'box.',
         start: 0,
         end: 0,
         zeroPad: 0
@@ -102,9 +102,9 @@ export default class Animations {
       repeat: 0
     });
     anims.create({
-      key: "trap",
-      frames: anims.generateFrameNames("sprite", {
-        prefix: "trap_back.",
+      key: 'trap',
+      frames: anims.generateFrameNames('sprite', {
+        prefix: 'trap_back.',
         start: 0,
         end: 1,
         zeroPad: 0
@@ -113,9 +113,9 @@ export default class Animations {
       repeat: 0
     });
     anims.create({
-      key: "overlay",
-      frames: anims.generateFrameNames("overlays", {
-        prefix: "overlay",
+      key: 'overlay',
+      frames: anims.generateFrameNames('overlays', {
+        prefix: 'overlay',
         start: 1,
         end: 3,
         zeroPad: 1
@@ -124,9 +124,9 @@ export default class Animations {
       repeat: -1
     });
     anims.create({
-      key: "shine",
-      frames: anims.generateFrameNames("effects", {
-        prefix: "shine.",
+      key: 'shine',
+      frames: anims.generateFrameNames('effects', {
+        prefix: 'shine.',
         start: 0,
         end: 5,
         zeroPad: 0
@@ -136,9 +136,9 @@ export default class Animations {
       repeatDelay: 1 * 1000
     });
     anims.create({
-      key: "escaped-message-draw",
-      frames: anims.generateFrameNames("escaped_message", {
-        prefix: "escaped_message.",
+      key: 'escaped-message-draw',
+      frames: anims.generateFrameNames('escaped_message', {
+        prefix: 'escaped_message.',
         start: 0,
         end: 9,
         zeroPad: 0
@@ -147,9 +147,9 @@ export default class Animations {
       repeat: 0
     });
     anims.create({
-      key: "escaped-message-loop",
-      frames: anims.generateFrameNames("escaped_message", {
-        prefix: "escaped_message.",
+      key: 'escaped-message-loop',
+      frames: anims.generateFrameNames('escaped_message', {
+        prefix: 'escaped_message.',
         start: 8,
         end: 9,
         zeroPad: 0

@@ -3,72 +3,84 @@ import Animations from '../../anims';
 import Player from './components/player';
 import Timer from './components/timer';
 import Traps from './components/traps';
+import Map from './components/map';
 import Escape from './components/escape';
 import {depth} from './mazeVariables';
+import {Debugger} from './debugger';
 
 export default class MazeScene extends Phaser.Scene {
     constructor() {
         super('maze')
     }
-    
-    preload() {}
 
-    create() {
+    init = (data) => {
+        this.newGame = data.newGame;
+        this.removableTraps = !this.newGame && data.removableTraps;
+        this.bloodTrail = !this.newGame && data.bloodTrail;
+        this.trapsSpotted = !this.newGame && data.trapsSpotted;
+    }
+    preload = () => {}
+
+    create = () => {
+        //super reliant on order, which sucks .... anyway they need to be:
+        //1) map
+        //2) player
+        //4) traps & escape
+
         const animations = new Animations(this.scene.scene.anims);
-        //draw map
-        const map = this.make.tilemap({ key: 'map' });
-        this.physics.world.setBounds(map.x, map.y, map.widthInPixels, map.heightInPixels, true, true, true, true);
-        const spawnPoint = map.findObject('spawn', obj => obj.name === 'spawn_point');
 
-        const floor_base = map.addTilesetImage('floor_base', 'floor_base');
-        const baseLayer = map.createStaticLayer('base', floor_base, 0, 0);
-        baseLayer.setCollisionByProperty({ collides: true });
+        this.map = new Map(this);
 
-        this.add.image(0, 0, 'forest_floor').setOrigin(0, 0);
-        this.add.image(0, 0, 'trees_back').setOrigin(0, 0);
-        this.add.image(0, 0, 'trees_front').setOrigin(0, 0).setDepth(depth.trees);
+        const spawnPoint = this.map.tileMap.findObject('spawn', obj => obj.name === 'spawn_point');
+        this.player = new Player({parent: this, x: spawnPoint.x, y: spawnPoint.y});
 
-        const frontScenery = this.physics.add.staticGroup();
-        frontScenery.create(28, 910, 'house').setDepth(depth.house);
+        this.traps = new Traps(this);
+        this.escape = new Escape(this);
 
-        //create classes
+        this.drawCamera()
 
-        this.player = new Player({ parent: this, x: spawnPoint.x, y: spawnPoint.y , bloodTrail: this.player ? this.player.bloodTrail : undefined});
-        this.physics.add.collider(this.player.aura, baseLayer, null, null, this);
-        this.physics.add.collider(this.player.aura, frontScenery, null, null, this);
+        // this.debuggingTools = new Debugger(this);
+        this.playTime = new Timer({parent: this, overrideDelay: this.traps.pathFinder.pathTime});
 
-        this.traps = new Traps({ parent: this, map: map, player: this.player, callback: this.fadeSceneRestart })
-        this.playTime = new Timer({ parent: this, time: this.time, input: this.input, callback: (time) => this.fadeSceneRestart(this.player, time, this.scene) });
-        this.escape = new Escape({ parent: this, map, player: this.player, playTime: this.playTime, callback: this.fadeSceneRestart })
+        this.drawDirections();
+    }
 
-        //add physics
-
-        //create camera
+    drawCamera = () => {
         this.camera = this.cameras.main;
         this.camera.zoom = 2;
         this.camera.startFollow(this.player.aura);
-        this.camera.setBounds(0, 0, map.widthInPixels, map.heightInPixels);
+        this.camera.setBounds(0, 0, this.map.tileMap.widthInPixels, this.map.tileMap.heightInPixels);
         this.camera.fadeEffect.start(false, 400, 0, 0, 0);
+    }
 
-        //create startup
+    drawDirections = () => {
         const directions = this.add.image(this.camera.midPoint.x + 30, this.camera.midPoint.y - 70, 'directions');
         directions.scrollFactor = 0;
         directions.setScale(0.3).setDepth(depth.directions);
         this.input.disable(this.player.aura.scene);
-        this.input.keyboard.once('keydown-SPACE', () => { directions.destroy(); this.input.enable(this.player.aura.scene); });
+        this.input.keyboard.once('keydown-SPACE', () => {directions.destroy(); this.input.enable(this.player.aura.scene);});
     }
 
-    fadeSceneRestart(player, time, scene, escaped = false) {
-        if (scene.systems.input.enabled || escaped) {
+    fadeSceneRestart = (player, time, scene, newGame = false) => {
+        if (scene.systems.input.enabled || newGame) {
             scene.systems.input.disable(player.aura.scene);
             scene.systems.cameras.main.fadeEffect.start(true, 400, 0, 0, 0);
-            const sceneRestartTimer = time.delayedCall(1 * 1000, () => { scene.restart({bloodHistory: this.player.bloodTrail}); }, [scene], this)
+            time.delayedCall(1 * 1000, () => scene.restart({
+                newGame,
+                removableTraps: this.traps.removableTraps,
+                bloodTrail: this.player.bloodTrail,
+                trapsSpotted: this.traps.trapsSpotted
+            }), [scene], this)
         }
     }
 
-    update(time, delta) {
+    update = (time, delta) => {
         this.player.update();
         this.traps && this.traps.update();
         this.playTime && this.playTime.update();
+        this.testingTools && this.testingTools.update();
+        if (this.traps.pathFinder.pathTime) {
+            this.playTime.overrideDelay = this.traps.pathFinder.pathTime;
+        }
     }
 }
