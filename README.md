@@ -10,19 +10,33 @@ i went with a very circular approach to the theme, and didn't really get to expr
 
 ## to-do for 1.0.0
 * finish v1 map graphics
-* character animation on timer loss (collapse)
-* trailing effect on player movement
- - put effect behind - understand properly how depth works
- - position effect lower down to where player's feet are vs mid body
+* trailing effect on player movement (graphics)
+* traps move position when you start a new game (open browser page/beat the game and restart)
 
 ## to-do for 1.5.0
 * sound
-* opening cutscene on game load (skippable with keypress)
-* ending cutscene on success (skippable with keypress)
-* graphic sizing fix
-* traps move position when you start a new game (open browser page/beat the game and restart)
+  - door slam on start
+  - walking sfx
+  - something for the trap
+  - background noise that increases as timer counts down
+* cutscenes
+  - on game load (skippable with keypress)
+  - on success (skippable with keypress)
+* character animations
+  - better trap animation
+  - timer loss animation (collapse)  
+* bring all graphics up to the same quality level
+* satisfying feedback/animations
+  - spacebar animates when hit 
+  - dir keys animate when hit
+  - can use these for the virtual keyboard?
+  - camera wobble on trapped? 
 
 ## to-do for 2.0.0
+* virtual keyboard / mobile friendly game setup
+
+## potential to-do
 * simon says minigame before maze portion to increase or decrease time allowed
-* virtual keyboard
-* high scores?
+* animated background
+* animated character icon (while standing still)
+* very short cutscene on loss (being dragged home)
