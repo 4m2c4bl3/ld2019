@@ -10,8 +10,11 @@ i went with a very circular approach to the theme, and didn't really get to expr
 
 ## to-do for 1.0.0
 * finish v1 map graphics
-* trailing effect on player movement (graphics)
-* traps reveal themselves more once you get the ! alert
+   - all bood effects
+   - trap revealed effects
+   - entire map base
+   - map canopy
+   - collapse anim
 
 ## to-do for 1.5.0
 * sound
