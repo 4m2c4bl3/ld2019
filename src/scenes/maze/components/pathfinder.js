@@ -32,6 +32,7 @@ export default class Pathfinder {
     this.pathFinder.findPath(0, Math.floor(base.height) - 1, Math.floor(base.width - 1 / 29), Math.floor(0 / 29), (path) => {
       if (path) {
         this.path = path;
+        this.pathTime = this.path.length * 0.5;
         this.drawPath();
       }
     });

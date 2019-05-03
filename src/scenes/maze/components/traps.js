@@ -3,13 +3,13 @@ import {depth} from './../mazeVariables'
 import Pathfinder from './pathfinder';
 
 export default class Traps {
-  constructor({parent, map, player, callback, newGame}) {
+  constructor({parent, map, player, callback, removableTraps}) {
     this.parent = parent;
     this.player = player;
     this.fadeSceneRestart = callback;
     this.alert;
     this.pathFinder = new Pathfinder({parent, map}); //use to keep regenerating paths;
-
+    this.removableTraps = removableTraps || [];
     this.createTraps(map)
   }
 
@@ -21,7 +21,12 @@ export default class Traps {
     //red traps are static, always there
     const redTrapGroup = this.trapsLayer.filterTiles((tile) => tile.properties.id === 1);
     this.drawNewTrapGroup(redTrapGroup);
-    this.drawDynamicTraps();
+    if (this.removableTraps.length > 0 ) {
+      this.removableTraps.forEach((trap) => this.trapsLayer.removeTileAt(trap.x, trap.y, false))
+      this.drawNewTrapGroup(this.trapsLayer.filterTiles((tile) => tile.properties.id > 1));
+    } else {
+      this.drawDynamicTraps();
+    }
     this.trapsLayer.setCollision([0, 1, 2, 3, 4, 5, 6]);
     this.pathFinder.testPath();
 
@@ -37,7 +42,6 @@ export default class Traps {
   }
 
   drawDynamicTraps = () => {
-    this.deletedTiles = [];
     const yellowTrapGroup = this.prepareDynamicTrapGroup(2);
     this.drawNewTrapGroup(yellowTrapGroup);
     const greenTrapGroup = this.prepareDynamicTrapGroup(3);
@@ -52,9 +56,11 @@ export default class Traps {
 
   prepareDynamicTrapGroup = (id) => {
     const newTrapGroup = this.trapsLayer.filterTiles((tile) => tile.properties.id === id);
-    const removedTrap = (Math.random() * (newTrapGroup.length - 1)).toFixed();
-    this.trapsLayer.removeTileAt(newTrapGroup[removedTrap].x, newTrapGroup[removedTrap].y, false)
-    newTrapGroup.splice(removedTrap, 1)
+    const removeTrapIndex = (Math.random() * (newTrapGroup.length - 1)).toFixed();
+    const removeTrap = {x: newTrapGroup[removeTrapIndex].x, y: newTrapGroup[removeTrapIndex].y};
+    this.removableTraps.push(removeTrap);
+    this.trapsLayer.removeTileAt(removeTrap.x, removeTrap.y, false)
+    newTrapGroup.splice(removeTrapIndex, 1)
     return newTrapGroup;
   }
 
