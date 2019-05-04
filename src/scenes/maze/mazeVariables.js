@@ -13,3 +13,4 @@ export const depth = {
 
 export const baseTrapTile = 1;
 export const dynamicTrapTiles = [2, 3, 4, 5, 6];
+export const scale = 1;

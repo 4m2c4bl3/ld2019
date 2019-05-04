@@ -32,7 +32,7 @@ export default class Pathfinder {
     this.pathFinder.setGrid(baseLayerArray);
     this.pathFinder.setAcceptableTiles([1])
     this.path = undefined;
-    this.pathFinder.findPath(0, Math.floor(base.height) - 1, Math.floor(base.width - 1 / 29), Math.floor(0 / 29), (path) => {
+    this.pathFinder.findPath(0, Math.floor(base.height) - 1, Math.floor(base.width - 1 / base.baseTileWidth), Math.floor(0 / base.baseTileHeight), (path) => {
       if (path) {
         this.path = path;
         this.pathTime = Math.ceil(this.path.length * 0.3);

@@ -10,17 +10,17 @@ export default class Timer {
         this.timerAlpha;
         this.overrideDelay = overrideDelay;
         this.delay = 20;
-        this.timerConfig = {delay: this.delay * 1000, callback: ({time, player, scene}) => parent.fadeSceneRestart(player, time, scene), args: [this.parent], callbackScope: this}
+        this.timerConfig = {delay: this.delay * 1000, callback: (parent) => parent.fadeSceneRestart(parent), args: [this.parent], callbackScope: this}
         this.timer = this.time.addEvent(this.timerConfig);
         this.timer.paused = true;
         this.input.keyboard.once('keydown-SPACE', () => this.timer.paused = false);
 
-        this.overlay = this.parent.add.sprite(this.parent.cameras.main.midPoint.x, this.parent.cameras.main.midPoint.y, 'overlays', 'overlay1').setAlpha(0.75).setDepth(depth.overlay);
+        this.overlay = this.parent.add.sprite(this.parent.cameras.main.midPoint.x, this.parent.cameras.main.midPoint.y, 'overlays', 'overlay1').setAlpha(0.75).setDepth(depth.overlay).setScale(2.5);
         this.overlay.blendMode = 'MULTIPLY';
         this.overlay.anims.play('overlay', true);
     }
     update() {
-        if (this.timer.delay !== this.delay * 1000)
+        if (this.timer.delay !== this.delay * 1000 && !this.timer.paused)
         {
           this.timer.reset({...this.timerConfig, delay: this.delay * 1000});
         }

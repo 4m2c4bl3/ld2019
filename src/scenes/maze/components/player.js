@@ -1,73 +1,74 @@
 import Phaser from 'phaser';
-import {depth} from './../mazeVariables';
+import { depth } from './../mazeVariables';
 
 export default class Player {
-  constructor({parent, x, y}) {
+  constructor({ parent, x, y }) {
     this.parent = parent;
     this.trapped = false;
+    this.paused = true;
     this.aura = this.parent.add.container(x, y);
 
     this.bloodTrail = [];
-    parent.bloodTrail && parent.bloodTrail.forEach(({blood}) => {
+    parent.bloodTrail && parent.bloodTrail.forEach(({ blood }) => {
       if (blood.alpha > 0) {
         const newBlood = blood.name !== 'trap' ? this.drawNewBlood(blood) : this.drawLargeBloodSplatter(blood);
-        this.bloodTrail.push({blood: newBlood});
+        this.bloodTrail.push({ blood: newBlood });
       }
     })
 
     this.sprite = this.parent.add.sprite(0, 0, 'sprite', 'sprite.back.0');
     this.sprite.name = 'player sprite';
-    this.aura.setSize(200, 200);
+    this.aura.setSize(this.parent.map.tileMap.tileWidth, this.sprite.height);
     this.aura.add(this.sprite);
     this.aura.getByName('player sprite').setDepth(depth.player);
     this.aura.setDepth(depth.player);
     this.parent.physics.world.add(this.aura);
     this.parent.physics.world.enable(this.aura);
-    this.aura.setScale(0.25);
-    this.aura.body.setCircle(25, 80, 150)
+    this.aura.body.setCircle(25, (this.aura.width / 3).toFixed(), this.aura.height / 4 * 3)
     this.aura.body.setCollideWorldBounds(true);
 
 
     this.parent.physics.add.collider(this.aura, this.parent.map.baseLayer, null, null, this);
-    this.parent.physics.add.collider(this.aura, this.parent.map.frontScenery, null, null, this);
+    // this.parent.physics.add.collider(this.aura, this.parent.map.frontScenery, null, null, this);
 
     this.cursors = this.parent.input.keyboard.createCursorKeys();
   }
 
   drawNewBlood = (target) => {
     const newBlood = this.parent.add.image(target.x, target.y, 'blood');
-    const scaleVariable = Math.random() * (0.2 - 0.4) + 0.2;
-    newBlood.setDepth(depth.blood).setScale(scaleVariable).setAlpha(target.type !== 'Container' ? target.alpha - (target.alpha/4).toFixed(3) : 1);
+    const scaleVariable = Math.random() * (1 - 2) + 1;
+    newBlood.setDepth(depth.blood).setScale(scaleVariable).setAlpha(target.type !== 'Container' ? target.alpha - (target.alpha / 4).toFixed(3) : 1);
     newBlood.blendMode = 'MULTIPLY';
     return newBlood;
   }
 
   drawLargeBloodSplatter = (target, fresh = false) => {
     const newBlood = this.parent.add.image(target.x, target.y, 'blood');
-    const scaleVariable = Math.random() * 0.4;
-    newBlood.setDepth(depth.blood).setScale(scaleVariable);
+    // const scaleVariable = Math.random() * (1 - 2) + 1;
+    newBlood.setDepth(depth.blood).setScale(2);
     newBlood.blendMode = 'MULTIPLY';
     newBlood.name = 'trap';
-    fresh && this.bloodTrail.push({blood: newBlood});
+    fresh && this.bloodTrail.push({ blood: newBlood });
     return newBlood;
   }
 
   drawBloodTrail = () => {
     if (!this.startStep) {
-      this.startStep = {...this.aura.body.position};
-      this.bloodDistance = Math.random() * (40 - 80) + 40;
+      this.startStep = { ...this.aura.body.position };
+      this.bloodDistance = Math.random() * (this.parent.map.tileMap.tileWidth - this.parent.map.tileMap.tileWidth * 2) + this.parent.map.tileMap.tileWidth;
     }
     else if (Math.abs(this.startStep.x - this.aura.body.position.x) > this.bloodDistance || Math.abs(this.startStep.y - this.aura.body.position.y) > this.bloodDistance) {
-      const blood = this.drawNewBlood({...this.aura, y: this.aura.y + 10});
-      this.bloodTrail.push({blood});
+      const blood = this.drawNewBlood({ ...this.aura, y: this.aura.y + 10 });
+      this.bloodTrail.push({ blood });
       this.startStep = undefined;
     }
   }
 
   update = () => {
     this.aura.body.embedded ? this.aura.body.touching.none = false : null;
-    if (this.parent.input.enabled){
-    this.drawBloodTrail();
+    if (this.trapped) this.paused = true;
+    if (!this.paused) {
+      this.drawBloodTrail();
     }
     function stopMovement(prevVelocity, sprite) {
       sprite.anims.stop();
@@ -77,12 +78,12 @@ export default class Player {
       else if (prevVelocity.y > 0) sprite.setTexture('sprite', 'sprite.front.0');
     }
 
-    const speed = this.cursors.space.isDown ? 175 : 120;
+    const speed = this.cursors.space.isDown ? 5 * this.parent.map.tileMap.tileWidth : 3 * this.parent.map.tileMap.tileWidth;
     this.sprite.anims.msPerFrame = this.cursors.space.isDown ? 100 : 150;
     const prevVelocity = this.aura.body.velocity.clone();
     this.aura.body.setVelocity(0);
 
-    if (this.sprite.scene.input.enabled && !this.trapped) {
+    if (!this.trapped && !this.paused) {
       if (this.cursors.left.isDown) {
         this.aura.body.setVelocityX(-speed);
         this.sprite.anims.play('left', true);

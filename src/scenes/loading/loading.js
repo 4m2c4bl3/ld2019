@@ -36,10 +36,10 @@ export default class LoadingScene extends Phaser.Scene {
       percentText.destroy();
     });
 
-    this.load.image('marks', 'assets/trap_marks.png');
+    this.load.image('traps', 'assets/traps.png');
     this.load.image('house', 'assets/house.png');
     this.load.image('directions', 'assets/directions.png')
-    this.load.image('floor_base', 'assets/floor_base.png');
+    this.load.image('base', 'assets/base.png');
     this.load.image('trees_front', 'assets/trees_front.png');
     this.load.image('trees_back', 'assets/trees_back.png');
     this.load.image('alert', 'assets/strong_exclamation.png');

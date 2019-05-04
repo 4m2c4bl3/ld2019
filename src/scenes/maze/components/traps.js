@@ -1,5 +1,5 @@
 import Phaser from 'phaser';
-import {depth, baseTrapTile, dynamicTrapTiles} from './../mazeVariables'
+import {depth, scale, baseTrapTile, dynamicTrapTiles} from './../mazeVariables'
 import Pathfinder from './pathfinder';
 
 export default class Traps {
@@ -17,8 +17,8 @@ export default class Traps {
   }
 
   createTraps = (map) => {
-    const marks = map.addTilesetImage('trap marks', 'marks');
-    this.trapsLayer = map.createDynamicLayer('traps', marks, 0, 0);
+    const trapTileset = map.addTilesetImage('traps', 'traps');
+    this.trapsLayer = map.createDynamicLayer('traps', trapTileset, 0, 0);
     this.trapsLayer.visible = false;
 
     //red traps are static, always there
@@ -62,12 +62,12 @@ export default class Traps {
 
   createTrapSpotted = (target) => {
     const trapSpotted = this.parent.add.image(target.x, target.y, 'misc');
-    trapSpotted.setScale(0.7);
+    trapSpotted.setScale(2.5);
     this.trapsSpotted.push(trapSpotted);
   }
 
   drawShine = (tile, scene) => {
-    let shine = scene.add.sprite(tile.getCenterX(), tile.getCenterY(), 'effects', 'shine.0').setScale(0.3).setDepth(depth.shine);
+    let shine = scene.add.sprite(tile.getCenterX(), tile.getCenterY(), 'effects', 'shine.0').setScale(scale).setDepth(depth.shine);
     scene.add.rect;
     shine.anims.play('shine', true);
     scene.physics.world.enable(shine, 0);
@@ -78,18 +78,18 @@ export default class Traps {
     const triggerX = (centerSprite.x > tile.body.center.x && Math.abs(centerSprite.x - tile.body.center.x) < tile.width / 3) || (centerSprite.x < tile.body.center.x && Math.abs(tile.body.center.x - centerSprite.x) < tile.width / 3);
     const triggerY = (centerSprite.y > tile.body.center.y && Math.abs(centerSprite.y - tile.body.center.y) < tile.height / 3) || (centerSprite.y < tile.body.center.y && Math.abs(tile.body.center.y - centerSprite.y) < tile.height / 3);
 
-    if (triggerX && triggerY) {
+    if (triggerX && triggerY && !this.player.trapped) {
       if (this.alert) {
         this.alert.destroy();
         this.alert = undefined;
       }
       this.player.drawLargeBloodSplatter(sprite.body, true);
       this.player.trapped = true;
-      this.parent.time.delayedCall(350, () => this.fadeSceneRestart(this.player, this.parent.time, this.parent.scene), [], this);
+      this.parent.time.delayedCall(350, () => this.fadeSceneRestart(this.parent), [], this);
     } else if (!this.alert && !this.player.aura.body.touching.none && this.player.aura.body.wasTouching.none) {
       this.alert = this.parent.add.image(this.player.aura.body.center.x, this.player.aura.body.center.y - 30, 'alert');
       this.alert.name = 'exclamation mark';
-      this.alert.setScale(0.3).setDepth(depth.alert);
+      this.alert.setScale(scale).setDepth(depth.alert);
 
       if (!this.trapsSpotted.find(trap => trap.x === tile.body.center.x && trap.y == tile.body.center.y)) {
         this.createTrapSpotted(tile.body.center);
