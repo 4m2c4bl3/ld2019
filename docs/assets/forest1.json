@@ -20,7 +20,7 @@
          "name":"escape",
          "objects":[
                 {
-                 "height":266.66667,
+                 "height":266.667,
                  "id":108,
                  "name":"",
                  "rotation":0,
@@ -31,14 +31,14 @@
                  "y":5.33333
                 }, 
                 {
-                 "height":677.999667,
+                 "height":678,
                  "id":109,
                  "name":"",
                  "rotation":0,
                  "type":"escape",
                  "visible":true,
                  "width":398,
-                 "x":3952.667,
+                 "x":3952.67,
                  "y":0
                 }],
          "opacity":1,
@@ -74,8 +74,8 @@
                  "type":"spawn_point",
                  "visible":true,
                  "width":0,
-                 "x":200,
-                 "y":4160
+                 "x":203,
+                 "y":3969
                 }],
          "opacity":1,
          "type":"objectgroup",

@@ -5,7 +5,7 @@ export default class Map {
     this.parent = parent;
     this.tileMap = this.parent.make.tilemap({ key: 'map' });
 
-    this.parent.physics.world.setBounds(this.tileMap.x, this.tileMap.y, this.tileMap.widthInPixels, this.tileMap.heightInPixels, true, true, true, true);
+    this.parent.physics.world.setBounds(0, 0, this.tileMap.widthInPixels, this.tileMap.heightInPixels, true, true, true, true);
 
     const baseTileset = this.tileMap.addTilesetImage('base', 'base');
     this.baseLayer = this.tileMap.createStaticLayer('base', baseTileset, 0, 0);
@@ -19,8 +19,8 @@ export default class Map {
     this.parent.add.image(0, 0, 'bg_above').setOrigin(0, 0).setDepth(depth.trees);
 
     this.parent.physics.world.enable(this.grass, 0);
-    // this.frontScenery = this.parent.physics.add.staticGroup();
-    // this.frontScenery.create(28, 910, 'house').setDepth(depth.house);
+    this.frontScenery = this.parent.physics.add.staticGroup();
+    this.frontScenery.create(0, this.tileMap.heightInPixels - this.parent.game.textures.list.house.source[0].height, 'house').setOrigin(0,0).setDepth(depth.house).refreshBody();
   }
 
   drawGrass = () => {

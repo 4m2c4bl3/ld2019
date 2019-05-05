@@ -24,13 +24,13 @@ export default class Player {
     this.aura.setDepth(depth.player);
     this.parent.physics.world.add(this.aura);
     this.parent.physics.world.enable(this.aura);
-    this.aura.body.setCircle(25, (this.aura.width / 3).toFixed(), this.aura.height / 4 * 3)
+    this.aura.body.setCircle(25, (this.aura.width / 3).toFixed(), this.aura.height / 4 * 3);
     this.aura.body.setCollideWorldBounds(true);
 
 
     this.parent.physics.add.collider(this.aura, this.parent.map.baseLayer, null, null, this);
     // this.parent.physics.add.overlap(this.aura, this.parent.map.grass, () => console.log('fart'), null, this);
-    // this.parent.physics.add.collider(this.aura, this.parent.map.frontScenery, null, null, this);
+    this.parent.physics.add.collider(this.aura, this.parent.map.frontScenery, null, null, this);
 
     this.cursors = this.parent.input.keyboard.createCursorKeys();
   }
@@ -58,7 +58,6 @@ export default class Player {
       this.startStep = { ...this.aura.body.position };
       const percentElapsed = this.parent.defeatTimer.timer.elapsed ? Phaser.Math.Clamp(1 - Phaser.Math.Percent(this.parent.defeatTimer.timer.elapsed, 0, this.parent.defeatTimer.timer.delay), 0.1, 0.9) : 0.01;
        this.bloodDistance = Phaser.Math.RND.realInRange(this.parent.map.tileMap.tileWidth * percentElapsed, (this.parent.map.tileMap.tileWidth * 2) * percentElapsed);
-       this.parent.defeatTimer.timer.elapsed && console.log(percentElapsed, this.bloodDistance);
       }
     else if (Math.abs(this.startStep.x - this.aura.body.position.x) > this.bloodDistance || Math.abs(this.startStep.y - this.aura.body.position.y) > this.bloodDistance) {
       const blood = this.drawNewBlood({ ...this.aura, y: this.aura.body.center.y });
