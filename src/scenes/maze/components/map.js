@@ -15,7 +15,7 @@ export default class Map {
     this.parent.add.image(0, 0, 'bg').setOrigin(0, 0);
     this.parent.add.image(0, 0, 'bg_below').setOrigin(0, 0);
     this.grass = this.parent.add.group();
-    this.drawGrass();
+    // this.drawGrass();
     this.parent.add.image(0, 0, 'bg_above').setOrigin(0, 0).setDepth(depth.trees);
 
     this.parent.physics.world.enable(this.grass, 0);

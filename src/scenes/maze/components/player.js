@@ -56,10 +56,9 @@ export default class Player {
   drawBloodTrail = () => {
     if (!this.startStep) {
       this.startStep = { ...this.aura.body.position };
-      const percentElapsed = this.parent.defeatTimer.timer.elapsed ? Phaser.Math.Percent(this.parent.defeatTimer.timer.elapsed, 0, this.parent.defeatTimer.timer.delay) : 0.1;
-      const elapsed = this.parent.defeatTimer.timer.elapsed && percentElapsed > 0.1 ? percentElapsed * 10 : 1 ;
-       this.bloodDistance = Phaser.Math.RND.realInRange(this.parent.map.tileMap.tileWidth / elapsed.toFixed(0), (this.parent.map.tileMap.tileWidth * 2) / elapsed.toFixed(0));
-       this.parent.defeatTimer.timer.elapsed && console.log(elapsed, this.bloodDistance);
+      const percentElapsed = this.parent.defeatTimer.timer.elapsed ? Phaser.Math.Clamp(1 - Phaser.Math.Percent(this.parent.defeatTimer.timer.elapsed, 0, this.parent.defeatTimer.timer.delay), 0.1, 0.9) : 0.01;
+       this.bloodDistance = Phaser.Math.RND.realInRange(this.parent.map.tileMap.tileWidth * percentElapsed, (this.parent.map.tileMap.tileWidth * 2) * percentElapsed);
+       this.parent.defeatTimer.timer.elapsed && console.log(percentElapsed, this.bloodDistance);
       }
     else if (Math.abs(this.startStep.x - this.aura.body.position.x) > this.bloodDistance || Math.abs(this.startStep.y - this.aura.body.position.y) > this.bloodDistance) {
       const blood = this.drawNewBlood({ ...this.aura, y: this.aura.body.center.y });

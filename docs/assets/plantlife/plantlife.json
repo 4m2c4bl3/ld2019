@@ -1,0 +1,60 @@
+{"frames": {
+
+"grasses.0":
+{
+	"frame": {"x":38,"y":1,"w":38,"h":40},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":0,"y":1,"w":38,"h":40},
+	"sourceSize": {"w":38,"h":43}
+},
+"grasses.1":
+{
+	"frame": {"x":1,"y":1,"w":35,"h":39},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":2,"y":0,"w":35,"h":39},
+	"sourceSize": {"w":38,"h":43}
+},
+"grasses.2":
+{
+	"frame": {"x":78,"y":1,"w":35,"h":43},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":3,"y":0,"w":35,"h":43},
+	"sourceSize": {"w":38,"h":43}
+},
+"large_grasses.0":
+{
+	"frame": {"x":1,"y":46,"w":124,"h":124},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":0,"y":0,"w":124,"h":124},
+	"sourceSize": {"w":124,"h":125}
+},
+"large_grasses.1":
+{
+	"frame": {"x":1,"y":298,"w":124,"h":125},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":124,"h":125},
+	"sourceSize": {"w":124,"h":125}
+},
+"large_grasses.2":
+{
+	"frame": {"x":1,"y":172,"w":124,"h":124},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":0,"y":1,"w":124,"h":124},
+	"sourceSize": {"w":124,"h":125}
+}},
+"meta": {
+	"app": "https://www.codeandweb.com/texturepacker",
+	"version": "1.0",
+	"image": "plantlife.png",
+	"format": "RGBA8888",
+	"size": {"w":126,"h":424},
+	"scale": "1",
+	"smartupdate": "$TexturePacker:SmartUpdate:b05bde4ea8bbd68d4c70698a56958ab6:a1571a3065ba2090e26450ca5d3f8901:109bf95d9d94fdc7c44c70379e87e667$"
+}
+}
