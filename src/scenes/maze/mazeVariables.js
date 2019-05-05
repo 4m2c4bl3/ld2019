@@ -1,14 +1,14 @@
 export const depth = {
-  blood: 1,
-  trap: 2,
-  player: 3,
-  shine: 4,
-  trees: 5,
-  house: 6,
-  alert: 7,
-  overlay: 8,
-  directions: 9,
-  escaped: 10
+  blood: 100000,
+  trap: 200000,
+  player: 300000,
+  shine: 400000,
+  trees: 500000,
+  house: 600000,
+  alert: 700000,
+  overlay: 800000,
+  directions: 900000,
+  escaped: 1000000
 };
 
 export const baseTrapTile = 1;

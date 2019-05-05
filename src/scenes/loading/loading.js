@@ -35,21 +35,24 @@ export default class LoadingScene extends Phaser.Scene {
       progressBox.destroy();
       percentText.destroy();
     });
-
-    this.load.image('traps', 'assets/traps.png');
-    this.load.image('house', 'assets/house.png');
-    this.load.image('directions', 'assets/directions.png')
-    this.load.image('base', 'assets/base.png');
-    this.load.image('trees_front', 'assets/trees_front.png');
-    this.load.image('trees_back', 'assets/trees_back.png');
-    this.load.image('alert', 'assets/strong_exclamation.png');
-    this.load.image('space_bar', 'assets/space_bar.png');
-    this.load.image('forest_floor', 'assets/forest_floor.png');
     this.load.tilemapTiledJSON('map', 'assets/forest1.json');
     this.load.atlas('sprite', 'assets/sprite-0.png', 'assets/sprite-0.json');
     this.load.atlas('overlays', 'assets/overlays.png', 'assets/overlays.json');
     this.load.atlas('effects', 'assets/effects.png', 'assets/effects.json');
     this.load.atlas('escaped_message', 'assets/escaped_message.png', 'assets/escaped_message.json');
+
+    this.load.image('bg', 'assets/plantlife/background.png');
+    this.load.image('bg_above', 'assets/plantlife/background_above.png');
+    this.load.image('bg_below', 'assets/plantlife/background_below.png');
+    this.load.atlas('plantlife', 'assets/plantlife/plantlife.png', 'assets/plantlife/plantlife.json');
+
+    this.load.image('traps', 'assets/traps.png');
+    this.load.image('house', 'assets/house.png');
+    this.load.image('directions', 'assets/directions.png')
+    this.load.image('base', 'assets/base.png');
+
+    this.load.image('alert', 'assets/strong_exclamation.png');
+    this.load.image('space_bar', 'assets/space_bar.png');
     this.load.image('blood', 'assets/blood_temp.png');
     this.load.image('misc', 'assets/grey_temp.png');
   }

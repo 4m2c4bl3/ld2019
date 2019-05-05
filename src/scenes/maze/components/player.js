@@ -29,6 +29,7 @@ export default class Player {
 
 
     this.parent.physics.add.collider(this.aura, this.parent.map.baseLayer, null, null, this);
+    // this.parent.physics.add.overlap(this.aura, this.parent.map.grass, () => console.log('fart'), null, this);
     // this.parent.physics.add.collider(this.aura, this.parent.map.frontScenery, null, null, this);
 
     this.cursors = this.parent.input.keyboard.createCursorKeys();
@@ -36,7 +37,7 @@ export default class Player {
 
   drawNewBlood = (target) => {
     const newBlood = this.parent.add.image(target.x, target.y, 'blood');
-    const scaleVariable = Math.random() * (1 - 2) + 1;
+    const scaleVariable = Phaser.Math.RND.realInRange(0.5, 1);
     newBlood.setDepth(depth.blood).setScale(scaleVariable).setAlpha(target.type !== 'Container' ? target.alpha - (target.alpha / 4).toFixed(3) : 1);
     newBlood.blendMode = 'MULTIPLY';
     return newBlood;
@@ -44,7 +45,7 @@ export default class Player {
 
   drawLargeBloodSplatter = (target, fresh = false) => {
     const newBlood = this.parent.add.image(target.x, target.y, 'blood');
-    // const scaleVariable = Math.random() * (1 - 2) + 1;
+    // const scaleVariable = Phaser.Math.RND.between(1,2);
     newBlood.setDepth(depth.blood).setScale(2);
     newBlood.blendMode = 'MULTIPLY';
     newBlood.name = 'trap';
@@ -55,10 +56,13 @@ export default class Player {
   drawBloodTrail = () => {
     if (!this.startStep) {
       this.startStep = { ...this.aura.body.position };
-      this.bloodDistance = Math.random() * (this.parent.map.tileMap.tileWidth - this.parent.map.tileMap.tileWidth * 2) + this.parent.map.tileMap.tileWidth;
-    }
+      const percentElapsed = this.parent.defeatTimer.timer.elapsed ? Phaser.Math.Percent(this.parent.defeatTimer.timer.elapsed, 0, this.parent.defeatTimer.timer.delay) : 0.1;
+      const elapsed = this.parent.defeatTimer.timer.elapsed && percentElapsed > 0.1 ? percentElapsed * 10 : 1 ;
+       this.bloodDistance = Phaser.Math.RND.realInRange(this.parent.map.tileMap.tileWidth / elapsed.toFixed(0), (this.parent.map.tileMap.tileWidth * 2) / elapsed.toFixed(0));
+       this.parent.defeatTimer.timer.elapsed && console.log(elapsed, this.bloodDistance);
+      }
     else if (Math.abs(this.startStep.x - this.aura.body.position.x) > this.bloodDistance || Math.abs(this.startStep.y - this.aura.body.position.y) > this.bloodDistance) {
-      const blood = this.drawNewBlood({ ...this.aura, y: this.aura.y + 10 });
+      const blood = this.drawNewBlood({ ...this.aura, y: this.aura.body.center.y });
       this.bloodTrail.push({ blood });
       this.startStep = undefined;
     }

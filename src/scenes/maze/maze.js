@@ -1,10 +1,10 @@
 import Phaser from 'phaser';
 import Animations from '../../anims';
 import Player from './components/player';
-import Timer from './components/timer';
+import DefeatTimer from './components/defeatTimer';
 import Traps from './components/traps';
 import Map from './components/map';
-import Escape from './components/escape';
+import EscapeZone from './components/escapeZone';
 import { depth, scale } from './mazeVariables';
 import { Debugger } from './debugger';
 
@@ -35,12 +35,12 @@ export default class MazeScene extends Phaser.Scene {
         this.player = new Player({ parent: this, x: spawnPoint.x, y: spawnPoint.y });
 
         this.traps = new Traps(this);
-        this.escape = new Escape(this);
+        this.escapeZone = new EscapeZone(this);
 
         this.drawCamera()
 
         // this.debuggingTools = new Debugger(this);
-        this.playTime = new Timer({ parent: this, overrideDelay: this.traps.pathFinder.pathTime });
+        this.defeatTimer = new DefeatTimer({ parent: this, overrideDelay: this.traps.pathFinder.pathTime });
 
         this.drawDirections();
     }
@@ -72,11 +72,12 @@ export default class MazeScene extends Phaser.Scene {
 
     update = (time, delta) => {
         this.player.update();
+        this.map && this.map.update();
         this.traps && this.traps.update();
-        this.playTime && this.playTime.update();
+        this.defeatTimer && this.defeatTimer.update();
         this.testingTools && this.testingTools.update();
         if (this.traps.pathFinder.pathTime) {
-            this.playTime.overrideDelay = this.traps.pathFinder.pathTime;
+            this.defeatTimer.overrideDelay = this.traps.pathFinder.pathTime;
         }
     }
 }

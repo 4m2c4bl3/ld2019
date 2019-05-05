@@ -1,6 +1,6 @@
 import Phaser from 'phaser';
 import {depth, scale, baseTrapTile, dynamicTrapTiles} from './../mazeVariables'
-import Pathfinder from './pathfinder';
+import PathFinder from './pathFinder';
 
 export default class Traps {
   constructor(parent) {
@@ -8,7 +8,7 @@ export default class Traps {
     this.player = parent.player;
     this.fadeSceneRestart = parent.fadeSceneRestart;
     this.alert;
-    this.pathFinder = new Pathfinder({parent, map: parent.map.tileMap}); //use to keep regenerating paths;
+    this.pathFinder = new PathFinder({parent, map: parent.map.tileMap}); //use to keep regenerating paths;
     this.removableTraps = parent.removableTraps || [];
     this.createTraps(parent.map.tileMap)
 

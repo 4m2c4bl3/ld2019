@@ -1,7 +1,7 @@
 import Phaser from 'phaser';
 import EasyStar from 'easystarjs';
 
-export default class Pathfinder {
+export default class PathFinder {
   constructor({ parent, map }) {
     this.map = map;
     this.parent = parent;
