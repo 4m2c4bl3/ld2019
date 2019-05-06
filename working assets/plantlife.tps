@@ -34,7 +34,7 @@
         <key>dataFormat</key>
         <string>phaser-json-hash</string>
         <key>textureFileName</key>
-        <filename>plantlife.png</filename>
+        <filename>../assets/plantlife.png</filename>
         <key>flipPVR</key>
         <false/>
         <key>pvrCompressionQuality</key>
@@ -132,7 +132,7 @@
             <key>data</key>
             <struct type="DataFile">
                 <key>name</key>
-                <filename>plantlife.json</filename>
+                <filename>../assets/plantlife.json</filename>
             </struct>
         </map>
         <key>multiPack</key>
@@ -181,41 +181,24 @@
         </struct>
         <key>individualSpriteSettings</key>
         <map type="IndividualSpriteSettingsMap">
-            <key type="filename">grasses/grasses.0.png</key>
-            <key type="filename">grasses/grasses.1.png</key>
-            <key type="filename">grasses/grasses.2.png</key>
+            <key type="filename">../assets/plantlife/wide grasses/wide_grasses.0.png</key>
+            <key type="filename">../assets/plantlife/wide grasses/wide_grasses.1.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>
                 <key>scale9Enabled</key>
                 <false/>
                 <key>scale9Borders</key>
-                <rect>10,11,19,21</rect>
+                <rect>50,25,99,51</rect>
                 <key>scale9Paddings</key>
-                <rect>10,11,19,21</rect>
-                <key>scale9FromFile</key>
-                <false/>
-            </struct>
-            <key type="filename">large grasses/large_grasses.0.png</key>
-            <key type="filename">large grasses/large_grasses.1.png</key>
-            <key type="filename">large grasses/large_grasses.2.png</key>
-            <struct type="IndividualSpriteSettings">
-                <key>pivotPoint</key>
-                <point_f>0.5,0.5</point_f>
-                <key>scale9Enabled</key>
-                <false/>
-                <key>scale9Borders</key>
-                <rect>31,31,62,63</rect>
-                <key>scale9Paddings</key>
-                <rect>31,31,62,63</rect>
+                <rect>50,25,99,51</rect>
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
         </map>
         <key>fileList</key>
         <array>
-            <filename>grasses</filename>
-            <filename>large grasses</filename>
+            <filename>../assets/plantlife/wide grasses</filename>
         </array>
         <key>ignoreFileList</key>
         <array/>

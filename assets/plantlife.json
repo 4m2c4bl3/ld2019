@@ -1,0 +1,28 @@
+{"frames": {
+
+"wide_grasses.0":
+{
+	"frame": {"x":1,"y":1,"w":198,"h":101},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":198,"h":101},
+	"sourceSize": {"w":198,"h":101}
+},
+"wide_grasses.1":
+{
+	"frame": {"x":201,"y":1,"w":198,"h":101},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":198,"h":101},
+	"sourceSize": {"w":198,"h":101}
+}},
+"meta": {
+	"app": "https://www.codeandweb.com/texturepacker",
+	"version": "1.0",
+	"image": "plantlife.png",
+	"format": "RGBA8888",
+	"size": {"w":400,"h":103},
+	"scale": "1",
+	"smartupdate": "$TexturePacker:SmartUpdate:eb06a78f6c493acb0e330cadbd7451ed:c663e309e8b26df583619abdd6663899:109bf95d9d94fdc7c44c70379e87e667$"
+}
+}

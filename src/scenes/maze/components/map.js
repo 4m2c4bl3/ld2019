@@ -14,47 +14,52 @@ export default class Map {
 
     this.parent.add.image(0, 0, 'bg').setOrigin(0, 0);
     this.parent.add.image(0, 0, 'bg_below').setOrigin(0, 0);
-    this.grass = this.parent.add.group();
-    // this.drawGrass();
+    this.drawGrass();
     this.parent.add.image(0, 0, 'bg_above').setOrigin(0, 0).setDepth(depth.trees);
-
-    this.parent.physics.world.enable(this.grass, 0);
     this.frontScenery = this.parent.physics.add.staticGroup();
-    this.frontScenery.create(0, this.tileMap.heightInPixels - this.parent.game.textures.list.house.source[0].height, 'house').setOrigin(0,0).setDepth(depth.house).refreshBody();
+    this.frontScenery.create(0, this.tileMap.heightInPixels - this.parent.game.textures.list.house.source[0].height, 'house').setOrigin(0, 0).setDepth(depth.house).refreshBody();
   }
 
   drawGrass = () => {
-    const floorTiles = this.baseLayer.tilemap.filterTiles(t => !t.properties.collides);
-
-    floorTiles.forEach(t => {
-      var hitArea = new Phaser.Geom.Rectangle(t.pixelX, t.pixelY, t.baseWidth, t.baseHeight);
-      var hitAreaCallback = Phaser.Geom.Rectangle.Contains;
-
-      const newGrass = this.parent.add.group({
-        key: 'plantlife',
-        frame: `large_grasses.${Phaser.Math.RND.between(0, 2)}`,
-        max: 3,
-        hitArea: hitArea,
-        hitAreaCallback: () => console.log('honk'),
-        visible: true,
-        // active: false, 
-      })
-
-      var rect = new Phaser.Geom.Rectangle(t.pixelX, t.pixelY, t.baseWidth, t.baseHeight);
-      Phaser.Actions.PlaceOnRectangle(newGrass.getChildren(), rect);
-      Phaser.Actions.SetXY(newGrass.getChildren(), 0, 0, t.pixelX, t.pixelY)
-      Phaser.Actions.SetRotation(newGrass.getChildren(), Phaser.Math.RND.between(0, 120))
-      // Phaser.Actions.Spread(newGrass.getChildren(), 'x', -50, 50, true);
-      // Phaser.Actions.Spread(newGrass.getChildren(), 'y', -50, 50, true);
-      // Phaser.Actions.Spread(newGrass.getChildren(), 'rotation', 0, 120, true);
-      this.grass.addMultiple(newGrass.getChildren(), true);
+    const grassImage = this.parent.cache.json.get('plantlife').frames["wide_grasses.0"].spriteSourceSize;
+    const numberOfXGrassRequired = Math.ceil(this.tileMap.widthInPixels / (grassImage.w / 2));
+    const numberOfYGrassRequired = Math.ceil(this.tileMap.heightInPixels / (grassImage.h / 4));
+    this.grass = this.parent.add.group({
+      classType: Phaser.GameObjects.Sprite,
+      defaultKey: 'plantlife',
+    });
+    this.grass.maxSize = numberOfXGrassRequired * numberOfYGrassRequired;
+    this.grass.createMultiple({
+      key: this.grass.defaultKey,
+      frame: `wide_grasses.${Phaser.Math.RND.between(0, 1)}`,
+      repeat: this.grass.maxSize - 1
+    });
+    Phaser.Actions.GridAlign(this.grass.getChildren(), {
+      width: numberOfXGrassRequired,
+      height: numberOfYGrassRequired,
+      cellWidth: grassImage.w - (grassImage.w / 2),
+      cellHeight: grassImage.h - (grassImage.h / 4)
+    });
+    Phaser.Actions.SetBlendMode(this.grass.getChildren(), 2);
+    Phaser.Actions.SetAlpha(0.5);
+    this.grass.getChildren().forEach((g, i) => {
+      g.x += Phaser.Math.RND.realInRange(-10, 10);
+      g.y += Phaser.Math.RND.realInRange(-10, 10);
+      if (i % 2 === 0) {
+        g.flipX = true;
+      }
     })
-    // this.parent.cameras.main.disableCull = true;
-    // Phaser.Actions.PlaceOnRectangle(group.getChildren(), rect, 5);
+    this.grass.getChildren().forEach(grass => grass.setDepth(grass.y + depth.plants));
   }
   update = () => {
-    //   this.grass.getChildren().forEach(e => { e.setActive(false); e.setVisible(false); })
-    //   const visibleGrass = this.parent.cameras.main.cull(this.grass.getChildren());
-    //   visibleGrass.forEach(e => { e.setActive(true); e.setVisible(true); })
+    if (this.parent.player.aura.body.isMoving) {
+      this.grass.getChildren().filter(e => e.body).forEach(e => {
+        this.grass.killAndHide(e);
+        this.parent.physics.world.disable(e);
+      });
+      const visibleGrass = this.parent.cameras.main.cull(this.grass.getChildren());
+      visibleGrass.forEach(e => { e.setVisible(true); })
+      this.parent.physics.world.enable(visibleGrass, 1);
+    }
   }
 }

@@ -34,7 +34,7 @@
         <key>dataFormat</key>
         <string>phaser-json-hash</string>
         <key>textureFileName</key>
-        <filename></filename>
+        <filename>../assets/player.png</filename>
         <key>flipPVR</key>
         <false/>
         <key>pvrCompressionQuality</key>
@@ -132,11 +132,11 @@
             <key>data</key>
             <struct type="DataFile">
                 <key>name</key>
-                <filename>sprite-{n}.json</filename>
+                <filename>../assets/player.json</filename>
             </struct>
         </map>
         <key>multiPack</key>
-        <true/>
+        <false/>
         <key>forceIdenticalLayout</key>
         <false/>
         <key>outputFormat</key>
@@ -181,7 +181,7 @@
         </struct>
         <key>individualSpriteSettings</key>
         <map type="IndividualSpriteSettingsMap">
-            <key type="filename">box.0.png</key>
+            <key type="filename">../assets/box.0.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>
@@ -191,6 +191,22 @@
                 <rect>39,42,77,84</rect>
                 <key>scale9Paddings</key>
                 <rect>39,42,77,84</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
+            <key type="filename">blood/blood.0.png</key>
+            <key type="filename">blood/blood.1.png</key>
+            <key type="filename">blood/blood.2.png</key>
+            <key type="filename">blood/blood.3.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>16,17,31,33</rect>
+                <key>scale9Paddings</key>
+                <rect>16,17,31,33</rect>
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
@@ -246,8 +262,8 @@
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
-            <key type="filename">trap_back/trap_back-0.png</key>
-            <key type="filename">trap_back/trap_back-1.png</key>
+            <key type="filename">trap_back/trap_back.0.png</key>
+            <key type="filename">trap_back/trap_back.1.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>
@@ -265,8 +281,9 @@
         <array>
             <filename>sprite-1</filename>
             <filename>hit_positioning</filename>
-            <filename>box.0.png</filename>
             <filename>trap_back</filename>
+            <filename>../assets/box.0.png</filename>
+            <filename>blood</filename>
         </array>
         <key>ignoreFileList</key>
         <array/>

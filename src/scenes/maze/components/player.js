@@ -16,7 +16,7 @@ export default class Player {
       }
     })
 
-    this.sprite = this.parent.add.sprite(0, 0, 'sprite', 'sprite.back.0');
+    this.sprite = this.parent.add.sprite(0, 0, 'playerSprite', 'sprite.back.0');
     this.sprite.name = 'player sprite';
     this.aura.setSize(this.parent.map.tileMap.tileWidth, this.sprite.height);
     this.aura.add(this.sprite);
@@ -36,17 +36,17 @@ export default class Player {
   }
 
   drawNewBlood = (target) => {
-    const newBlood = this.parent.add.image(target.x, target.y, 'blood');
+    const newBlood = this.parent.add.sprite(target.x + Phaser.Math.RND.between(-5, 5), target.y + Phaser.Math.RND.between(-5, 5), 'playerSprite', `blood.${Phaser.Math.RND.between(0, 3)}`);
     const scaleVariable = Phaser.Math.RND.realInRange(0.5, 1);
-    newBlood.setDepth(depth.blood).setScale(scaleVariable).setAlpha(target.type !== 'Container' ? target.alpha - (target.alpha / 4).toFixed(3) : 1);
+    newBlood.setDepth(newBlood.y + depth.blood).setScale(scaleVariable).setAlpha(target.type !== 'Container' ? target.alpha - (target.alpha / 4).toFixed(3) : 1);
     newBlood.blendMode = 'MULTIPLY';
     return newBlood;
   }
 
   drawLargeBloodSplatter = (target, fresh = false) => {
-    const newBlood = this.parent.add.image(target.x, target.y, 'blood');
+    const newBlood = this.parent.add.sprite(target.x, target.y, 'playerSprite', `blood.${Phaser.Math.RND.between(0, 3)}`);
     // const scaleVariable = Phaser.Math.RND.between(1,2);
-    newBlood.setDepth(depth.blood).setScale(2);
+    newBlood.setDepth(newBlood.y + depth.blood).setScale(2);
     newBlood.blendMode = 'MULTIPLY';
     newBlood.name = 'trap';
     fresh && this.bloodTrail.push({ blood: newBlood });
@@ -57,8 +57,8 @@ export default class Player {
     if (!this.startStep) {
       this.startStep = { ...this.aura.body.position };
       const percentElapsed = this.parent.defeatTimer.timer.elapsed ? Phaser.Math.Clamp(1 - Phaser.Math.Percent(this.parent.defeatTimer.timer.elapsed, 0, this.parent.defeatTimer.timer.delay), 0.1, 0.9) : 0.01;
-       this.bloodDistance = Phaser.Math.RND.realInRange(this.parent.map.tileMap.tileWidth * percentElapsed, (this.parent.map.tileMap.tileWidth * 2) * percentElapsed);
-      }
+      this.bloodDistance = Phaser.Math.RND.realInRange(this.parent.map.tileMap.tileWidth * percentElapsed, (this.parent.map.tileMap.tileWidth * 2) * percentElapsed);
+    }
     else if (Math.abs(this.startStep.x - this.aura.body.position.x) > this.bloodDistance || Math.abs(this.startStep.y - this.aura.body.position.y) > this.bloodDistance) {
       const blood = this.drawNewBlood({ ...this.aura, y: this.aura.body.center.y });
       this.bloodTrail.push({ blood });
@@ -68,16 +68,17 @@ export default class Player {
 
   update = () => {
     this.aura.body.embedded ? this.aura.body.touching.none = false : null;
+    this.aura.setDepth(this.aura.y + depth.player);
     if (this.trapped) this.paused = true;
     if (!this.paused) {
       this.drawBloodTrail();
     }
     function stopMovement(prevVelocity, sprite) {
       sprite.anims.stop();
-      if (prevVelocity.x < 0) sprite.setTexture('sprite', 'sprite.left.0');
-      else if (prevVelocity.x > 0) sprite.setTexture('sprite', 'sprite.right.0');
-      else if (prevVelocity.y < 0) sprite.setTexture('sprite', 'sprite.back.0');
-      else if (prevVelocity.y > 0) sprite.setTexture('sprite', 'sprite.front.0');
+      if (prevVelocity.x < 0) sprite.setTexture('playerSprite', 'sprite.left.0');
+      else if (prevVelocity.x > 0) sprite.setTexture('playerSprite', 'sprite.right.0');
+      else if (prevVelocity.y < 0) sprite.setTexture('playerSprite', 'sprite.back.0');
+      else if (prevVelocity.y > 0) sprite.setTexture('playerSprite', 'sprite.front.0');
     }
 
     const speed = this.cursors.space.isDown ? 5 * this.parent.map.tileMap.tileWidth : 3 * this.parent.map.tileMap.tileWidth;
@@ -108,7 +109,7 @@ export default class Player {
           const trappedAnimKey = `${anims.currentAnim.key}-hit`;
           anims.stop();
 
-          const trap = this.parent.add.sprite(0, 0, 'sprite', 'trap_back.0');
+          const trap = this.parent.add.sprite(0, 0, 'playerSprite', 'trap_back.0');
           trap.name = 'trap'
           this.aura.add(trap);
           this.aura.swap(trap, this.sprite);

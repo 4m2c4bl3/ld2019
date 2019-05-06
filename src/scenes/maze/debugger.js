@@ -5,8 +5,8 @@ export class Debugger {
 
     this.parent.cameras.add(2, 2, 160, 160)
       .setName("mini")
-      .setScroll(350, 350)
-      .setZoom(0.15);
+      .setScroll(2050, 2050)
+      .setZoom(0.03);
 
     const debugGraphics = this.parent.add.graphics().setAlpha(0.75);
     parent.map.tileMap.renderDebug(debugGraphics, {

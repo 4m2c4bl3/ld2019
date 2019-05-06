@@ -30,13 +30,8 @@ export default class LoadingScene extends Phaser.Scene {
 
     });
 
-    this.load.on('complete', function () {
-      progressBar.destroy();
-      progressBox.destroy();
-      percentText.destroy();
-    });
     this.load.tilemapTiledJSON('map', 'assets/forest1.json');
-    this.load.atlas('sprite', 'assets/sprite-0.png', 'assets/sprite-0.json');
+    this.load.atlas('playerSprite', 'assets/player.png', 'assets/player.json');
     this.load.atlas('overlays', 'assets/overlays.png', 'assets/overlays.json');
     this.load.atlas('effects', 'assets/effects.png', 'assets/effects.json');
     this.load.atlas('escaped_message', 'assets/escaped_message.png', 'assets/escaped_message.json');
@@ -44,7 +39,7 @@ export default class LoadingScene extends Phaser.Scene {
     this.load.image('bg', 'assets/plantlife/background.png');
     this.load.image('bg_above', 'assets/plantlife/background_above.png');
     this.load.image('bg_below', 'assets/plantlife/background_below.png');
-    this.load.atlas('plantlife', 'assets/plantlife/plantlife.png', 'assets/plantlife/plantlife.json');
+    this.load.atlas('plantlife', 'assets/plantlife.png', 'assets/plantlife.json');
 
     this.load.image('traps', 'assets/traps.png');
     this.load.image('house', 'assets/house.png');

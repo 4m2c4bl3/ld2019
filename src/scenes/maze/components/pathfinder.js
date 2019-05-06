@@ -13,7 +13,7 @@ export default class PathFinder {
   drawPath = () => {
     this.path.forEach(pathItem => {
       const baseTile = this.map.findTile(tile => tile.x === pathItem.x && tile.y === pathItem.y)
-      const baseTileImage = this.parent.add.image(baseTile.pixelX, baseTile.pixelY, 'blood').setOrigin(0, 0).setAlpha(0);
+      const baseTileImage = this.parent.add.image(baseTile.pixelX, baseTile.pixelY, 'blood').setScale(4).setOrigin(0, 0).setAlpha(0);
       this.tiles.push(baseTileImage);
     })
   }

@@ -33,7 +33,7 @@ export default class EscapeZone {
       const startTime = this.parent.defeatTimer.timerAlpha < 0 ? 0 : this.parent.defeatTimer.timerAlpha;
       this.parent.defeatTimer.overrideAlpha = this.parent.scene.systems.tweens.addCounter({from: startTime, to: 1, duration: 250});
       
-      this.escapedSprite = this.parent.add.sprite(this.parent.camera.midPoint.x, (this.parent.camera.midPoint.y - (this.parent.player.sprite.height / 2)), 'sprite', 'sprite.right.0').setScale(this.displayScale).setDepth(depth.escaped);
+      this.escapedSprite = this.parent.add.sprite(this.parent.camera.midPoint.x, (this.parent.camera.midPoint.y - (this.parent.player.sprite.height / 2)), 'playerSprite', 'sprite.right.0').setScale(this.displayScale).setDepth(depth.escaped);
       this.escapedSprite.anims.play('right', true);
       this.escapedSprite.anims.msPerFrame = 200;
       this.escapedText = this.parent.add.sprite(this.parent.camera.midPoint.x, this.parent.camera.midPoint.y + (this.escapedSprite.displayHeight / 4)*2, 'escaped_message', 'escaped_message.0').setScale(this.displayScale).setDepth(depth.escaped);

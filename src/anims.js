@@ -4,7 +4,7 @@ export default class Animations {
   constructor(anims) {
     anims.create({
       key: 'left',
-      frames: anims.generateFrameNames('sprite', {
+      frames: anims.generateFrameNames('playerSprite', {
         prefix: 'sprite.left.',
         start: 0,
         end: 3,
@@ -15,7 +15,7 @@ export default class Animations {
     });
     anims.create({
       key: 'left-hit',
-      frames: anims.generateFrameNames('sprite', {
+      frames: anims.generateFrameNames('playerSprite', {
         prefix: 'hit.left.',
         start: 0,
         end: 2,
@@ -26,7 +26,7 @@ export default class Animations {
     });
     anims.create({
       key: 'right',
-      frames: anims.generateFrameNames('sprite', {
+      frames: anims.generateFrameNames('playerSprite', {
         prefix: 'sprite.right.',
         start: 0,
         end: 3,
@@ -37,7 +37,7 @@ export default class Animations {
     });
     anims.create({
       key: 'right-hit',
-      frames: anims.generateFrameNames('sprite', {
+      frames: anims.generateFrameNames('playerSprite', {
         prefix: 'hit.right.',
         start: 0,
         end: 2,
@@ -48,7 +48,7 @@ export default class Animations {
     });
     anims.create({
       key: 'front',
-      frames: anims.generateFrameNames('sprite', {
+      frames: anims.generateFrameNames('playerSprite', {
         prefix: 'sprite.front.',
         start: 0,
         end: 3,
@@ -59,7 +59,7 @@ export default class Animations {
     });
     anims.create({
       key: 'front-hit',
-      frames: anims.generateFrameNames('sprite', {
+      frames: anims.generateFrameNames('playerSprite', {
         prefix: 'hit.front.',
         start: 0,
         end: 2,
@@ -70,7 +70,7 @@ export default class Animations {
     });
     anims.create({
       key: 'back',
-      frames: anims.generateFrameNames('sprite', {
+      frames: anims.generateFrameNames('playerSprite', {
         prefix: 'sprite.back.',
         start: 0,
         end: 3,
@@ -81,7 +81,7 @@ export default class Animations {
     });
     anims.create({
       key: 'back-hit',
-      frames: anims.generateFrameNames('sprite', {
+      frames: anims.generateFrameNames('playerSprite', {
         prefix: 'hit.back.',
         start: 0,
         end: 2,
@@ -92,7 +92,7 @@ export default class Animations {
     });
     anims.create({
       key: 'box',
-      frames: anims.generateFrameNames('sprite', {
+      frames: anims.generateFrameNames('playerSprite', {
         prefix: 'box.',
         start: 0,
         end: 0,
@@ -103,7 +103,7 @@ export default class Animations {
     });
     anims.create({
       key: 'trap',
-      frames: anims.generateFrameNames('sprite', {
+      frames: anims.generateFrameNames('playerSprite', {
         prefix: 'trap_back.',
         start: 0,
         end: 1,
