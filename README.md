@@ -5,8 +5,7 @@ i went with a very circular approach to the theme, and didn't really get to expr
 
 ### timeline goals
 * 1.0.0 released by may 4th
-* 1.5.0 released by may 6th
-* 2.0.0 released by may 12th 
+* 1.5.0 released by may 12th
 
 ## to-do for 1.0.0
 * finish v1 map graphics
