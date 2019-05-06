@@ -39,7 +39,7 @@ export default class MazeScene extends Phaser.Scene {
 
         this.drawCamera()
 
-        this.debuggingTools = new Debugger(this);
+        // this.debuggingTools = new Debugger(this);
         this.defeatTimer = new DefeatTimer({ parent: this, overrideDelay: this.traps.pathFinder.pathTime });
 
         this.drawDirections();
