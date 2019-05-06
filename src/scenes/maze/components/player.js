@@ -28,9 +28,9 @@ export default class Player {
     this.aura.body.setCollideWorldBounds(true);
 
 
-    this.parent.physics.add.collider(this.aura, this.parent.map.baseLayer, null, null, this);
+    // this.parent.physics.add.collider(this.aura, this.parent.map.baseLayer, null, null, this);
+    // this.parent.physics.add.collider(this.aura, this.parent.map.frontScenery, null, null, this);
     // this.parent.physics.add.overlap(this.aura, this.parent.map.grass, () => console.log('fart'), null, this);
-    this.parent.physics.add.collider(this.aura, this.parent.map.frontScenery, null, null, this);
 
     this.cursors = this.parent.input.keyboard.createCursorKeys();
   }

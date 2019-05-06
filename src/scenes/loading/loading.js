@@ -43,6 +43,7 @@ export default class LoadingScene extends Phaser.Scene {
 
     this.load.image('traps', 'assets/traps.png');
     this.load.image('house', 'assets/house.png');
+    this.load.image('road', 'assets/road.png');
     this.load.image('directions', 'assets/directions.png')
     this.load.image('base', 'assets/base.png');
 

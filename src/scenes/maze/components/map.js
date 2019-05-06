@@ -17,8 +17,34 @@ export default class Map {
     this.drawGrass();
     this.parent.add.image(0, 0, 'bg_above').setOrigin(0, 0).setDepth(depth.trees);
     this.frontScenery = this.parent.physics.add.staticGroup();
-    this.frontScenery.create(0, this.tileMap.heightInPixels - this.parent.game.textures.list.house.source[0].height, 'house').setOrigin(0, 0).setDepth(depth.house).refreshBody();
+    this.drawHouse();
+    this.drawRoad();
   }
+
+  drawHouse = () => {
+    const houseImage = this.parent.game.textures.list.house.source[0];
+    this.frontScenery.create(0, this.tileMap.heightInPixels - houseImage.height, 'house')
+      .setOrigin(0, 0)
+      .setDepth(depth.house)
+      .refreshBody();
+      this.frontScenery.getFirstAlive().body
+      .setSize(houseImage.width, houseImage.height / 3)
+      .setOffset(0, houseImage.height - (houseImage.height / 3));
+  }
+
+drawRoad = () => {
+  const roadImage = this.parent.game.textures.list.road.source[0];
+  this.frontScenery.create(this.tileMap.widthInPixels - roadImage.width, 0, 'road')
+    .setOrigin(0, 0)
+    .setDepth(depth.house)
+    .refreshBody();
+    this.grass.getChildren().forEach(leaf => {
+      if (Phaser.Geom.Intersects.RectangleToRectangle(leaf, this.frontScenery.getFirstAlive()))
+      {
+        this.grass.remove(leaf, true, true);
+      }
+    })
+}
 
   drawGrass = () => {
     const grassImage = this.parent.cache.json.get('plantlife').frames["wide_grasses.0"].spriteSourceSize;
@@ -53,10 +79,7 @@ export default class Map {
   }
   update = () => {
     if (this.parent.player.aura.body.isMoving) {
-      this.grass.getChildren().filter(e => e.body).forEach(e => {
-        this.grass.killAndHide(e);
-        this.parent.physics.world.disable(e);
-      });
+      this.grass.getChildren().filter(e => e.body).forEach(e => { this.grass.killAndHide(e); this.parent.physics.world.disable(e); });
       const visibleGrass = this.parent.cameras.main.cull(this.grass.getChildren());
       visibleGrass.forEach(e => { e.setVisible(true); })
       this.parent.physics.world.enable(visibleGrass, 1);
